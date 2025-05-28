@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purelight Power | Energize Your Career</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #000;
+            color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 2px 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        #company-logo {
+            max-width: 140px;
+            height: auto;
+            margin-top: 3px;
+        }
+
+  
+        .hero {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #hero-video-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            transform: translateX(-50%) translateY(-50%);
+            background-size: cover;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            color: #fff;
+        }
+
+        h1 {
+            font-size: 5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background-color: #4ac1e0;
+            color: #000;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(74, 193, 224, 0.4);
+        }
+
+     
+        .video-container {
+            position: relative;
+            padding-top: 56.25%;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            margin-bottom: 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+      
+              .video-heading {
+          font-size: 3rem;
+          font-weight: 900;
+          text-transform: uppercase;
+          text-align: center;
+          color: #4ac1e0;
+          margin: 10px 0;
+          letter-spacing: 3px;
+      }
+
+      /* Adjusting the video section padding to accommodate the new heading */
+      .video-section {
+          padding: 20px 0;
+          background: #111;
+      }
+
+        .form-section {
+            padding: 20px 0;
+            background: #4ac1e0;
+        }
+
+        .form-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            color: #000;
+        }
+
+        h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input[type="text"], input[type="email"], input[type="tel"], select {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus, select:focus {
+            outline: none;
+            border-color: #4ac1e0;
+        }
+
+        #submitApplication {
+            width: 100%;
+            padding: 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            background-color: #000;
+            color: #fff;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        #submitApplication:hover {
+            background-color: #4ac1e0;
+            color: #000;
+            transform: translateY(-5px);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 60px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+            color: #000;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #aaa;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        #loadingSpinner {
+            display: none;
+            position: fixed;
+            z-index: 2001;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+        }
+
+        #loadingSpinner:after {
+            content: " ";
+            display: block;
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+            border-radius: 50%;
+            border: 6px solid #4ac1e0;
+            border-color: #4ac1e0 transparent #4ac1e0 transparent;
+            animation: spin 1.2s linear infinite;
+        }
+      
+        .error {
+            border-color: red;
+        }
+        .success {
+            border-color: green;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .blur {
+            filter: blur(5px);
+            transition: filter 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+
+            .form-container {
+                padding: 40px;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+            .video-heading {
+              font-size: 2rem;
+          }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <img src="https://ucarecdn.com/da37f4fe-bc75-4e30-9d1b-bf57397a71c2/PLPFullColourLogoReverseNoBackground.svg" alt="Purelight Power Logo" id="company-logo">
+        </div>
+    </header>
+  <br>
+
+    <section class="video-section">
+        <div class="container">
+            <h2 class="video-heading">What Sets Us Apart?</h2>
+            <div class="video-container">
+                <iframe src="https://player.vimeo.com/video/942487413?autoplay=1&controls=1&loop=1" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write" allowfullscreen></iframe>
+            </div>
+        </div>
+    </section>
+
+    <section id="register" class="form-section">
+        <div class="container">
+            <div class="form-container">
+                <h2>Join the Powerhouse</h2>
+                <h3>Register For Our Next Opportunity Night</h3>
+                <form id="registrationForm" novalidate>
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" required>
+
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" required>
+
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+
+                    <label for="phone">Phone Number</label>
+                    <input 
+                        type="tel" 
+                        id="phone" 
+                        name="phone" 
+                        required 
+                        pattern="^\+?[1-9]\d{10,14}$|^\d{7}$" 
+                        title="Please enter a valid E.164 or 10-digit phone number"
+                        aria-describedby="phoneHelp"
+                    >
+                    <small id="phoneHelp" style="color: red; display: none;">Please enter a valid 10-digit phone number.</small>
+
+                    <label for="event">Select Virtual Event Session</label>
+                    <select id="event" name="event" required>
+                        <!-- Options will be populated by JavaScript -->
+                    </select>
+
+                    <input type="hidden" name="utm_id" id="utm_id">
+                    <input type="hidden" name="utm_source" id="utm_source">
+                    <input type="hidden" name="utm_medium" id="utm_medium">
+                    <input type="hidden" name="utm_campaign" id="utm_campaign">
+                    <input type="hidden" name="recordId" id="recordId">
+                    
+                    <button type="submit" id="submitApplication">Claim Your Spot</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <div id="loadingSpinner"></div>
+
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>You're In!</h2>
+            <p>Get ready to power up your career. Check your email for your exclusive event link.</p>
+        </div>
+    </div>
+
+    <script src="https://player.vimeo.com/api/player.js"></script>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Prefill form fields with URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById('utm_id').value = urlParams.get('utm_id') || '';
+        document.getElementById('utm_source').value = urlParams.get('utm_source') || '';
+        document.getElementById('utm_medium').value = urlParams.get('utm_medium') || '';
+        document.getElementById('utm_campaign').value = urlParams.get('utm_campaign') || '';
+
+        // Prefill form fields if available
+        const prefillFields = ['firstName', 'lastName', 'email', 'phone', 'recordId'];
+        prefillFields.forEach(field => {
+            const fieldValue = urlParams.get(field);
+            if (fieldValue) {
+                document.getElementById(field).value = fieldValue;
+            }
+        });
+
+        // Populate event sessions
+        fetch('/demio/event/829792/sessions')
+            .then(response => response.json())
+            .then(eventData => {
+                console.log(eventData);
+                const eventSelect = document.getElementById('event');
+                
+                // Sort the dates array by timestamp (earliest first)
+                eventData.dates.sort((a, b) => a.timestamp - b.timestamp);
+                
+                // Take only the first eight events
+                const nextTwoEvents = eventData.dates.slice(0, 8);
+                
+                nextTwoEvents.forEach(date => {
+                    const option = document.createElement('option');
+                    option.value = date.date_id;
+
+                    const localDate = new Date(date.timestamp * 1000);
+                    const dateOptions = { weekday: 'short', month: 'short', day: 'numeric' };
+                    const timeOptions = { hour: 'numeric', minute: 'numeric', hour12: true, timeZoneName: 'short' };
+                    const formattedDate = localDate.toLocaleDateString('en-US', dateOptions);
+                    const formattedTime = localDate.toLocaleTimeString('en-US', timeOptions);
+
+                    option.text = `${formattedDate} at ${formattedTime}`;
+                    eventSelect.add(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching event sessions:', error);
+                alert('Failed to load event sessions. Please try again later.');
+            });
+
+        // Add form submission event listener
+        document.getElementById('registrationForm').addEventListener('submit', handleFormSubmit);
+
+        // Add event listener for phone input
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('input', validatePhoneNumber);
+
+        // Initial validation in case the phone field is prefilled
+        validatePhoneNumber();
+    });
+
+    function isValidPhoneNumber(phone) {
+        // E.164 format: +12345678 to +123456789012345 (8 to 15 digits excluding '+')
+        const e164Regex = /^\+?[1-9]\d{10,14}$/;
+        
+        // 10-digit number
+        const tenDigitRegex = /^\d{10}$/;
+        
+        return e164Regex.test(phone) || tenDigitRegex.test(phone);
+    }
+      
+    function validatePhoneNumber() {
+        const phoneInput = document.getElementById('phone');
+        const phoneHelp = document.getElementById('phoneHelp');
+        const phoneNumber = phoneInput.value.trim();
+
+        if (isValidPhoneNumber(phoneNumber)) {
+            phoneInput.classList.remove('error');
+            phoneInput.classList.add('success');
+            phoneHelp.style.display = 'none';
+        } else {
+            phoneInput.classList.remove('success');
+            phoneInput.classList.add('error');
+            if (phoneNumber.length > 0) { // Show error only if input is not empty
+                phoneHelp.style.display = 'block';
+            } else {
+                phoneHelp.style.display = 'none';
+            }
+        }
+    }
+
+    async function handleFormSubmit(e) {
+        e.preventDefault();
+
+        const phoneInput = document.getElementById('phone');
+        const phoneNumber = phoneInput.value.trim();
+        const phoneHelp = document.getElementById('phoneHelp');
+
+        if (!isValidPhoneNumber(phoneNumber)) {
+            phoneInput.classList.add('error');
+            phoneHelp.style.display = 'block';
+            phoneInput.focus();
+            return;
+        }
+
+        // Disable the submit button and show loading spinner
+        const submitButton = document.getElementById('submitApplication');
+        submitButton.disabled = true;
+        document.getElementById('loadingSpinner').style.display = 'block';
+        document.querySelector('.container').classList.add('blur');
+        document.querySelector('.video-container').classList.add('blur');
+
+        const formData = {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            email: document.getElementById('email').value,
+            phone: phoneNumber,
+            event: document.getElementById('event').value,
+            utmId: document.getElementById('utm_id').value,
+            utmSource: document.getElementById('utm_source').value,
+            utmMedium: document.getElementById('utm_medium').value,
+            utmCampaign: document.getElementById('utm_campaign').value,
+            recordId: document.getElementById('recordId').value,
+        };
+
+        try {
+            // Send form data to /register-for-demio endpoint
+            const demioResponse = await fetch('/register-for-demio', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            if (!demioResponse.ok) {
+                throw new Error('Error submitting registration to Demio.');
+            }
+
+            // Send form data to /upsert-record endpoint
+            const upsertResponse = await fetch('/upsert-record', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            if (!upsertResponse.ok) {
+                throw new Error('Error upserting record in Airtable.');
+            }
+
+            // Show the success modal only after successful submissions
+            document.getElementById('successModal').style.display = 'flex';
+
+        } catch (error) {
+            // Handle errors
+            console.error('Error:', error);
+            alert('There was an error submitting your registration. Please try again.');
+        } finally {
+            // Re-enable the submit button and hide loading spinner
+            submitButton.disabled = false;
+            document.getElementById('loadingSpinner').style.display = 'none';
+            document.querySelector('.container').classList.remove('blur');
+            document.querySelector('.video-container').classList.remove('blur');
+        }
+    }
+
+    // Close the modal if the user clicks outside of it
+    window.onclick = function(event) {
+        const modal = document.getElementById('successModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+
+    // Close button functionality for the modal
+    document.querySelector('.close').addEventListener('click', function() {
+        document.getElementById('successModal').style.display = 'none';
+    });
+    </script>
+</body>
+</html>

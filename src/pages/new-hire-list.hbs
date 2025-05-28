@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{pageTitle}}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <style>
+        /* Font Declarations */
+        @font-face {
+            font-family: 'INT Circular 2';
+            src: url('https://cdn.glitch.global/7028db6c-636a-40cc-9a9f-18237822137e/int_circular_2_tt_black-webfont.woff2?v=1730153113510') format('woff2');
+            font-weight: 900;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'INT Circular 2';
+            src: url('https://cdn.glitch.global/7028db6c-636a-40cc-9a9f-18237822137e/int_circular_2_tt_black_italic-webfont.woff2?v=1730153110956') format('woff2');
+            font-weight: 900;
+            font-style: italic;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'INT Circular 2';
+            src: url('https://cdn.glitch.global/7028db6c-636a-40cc-9a9f-18237822137e/int_circular_2_tt_bold_italic-webfont.woff2?v=1730153115702') format('woff2');
+            font-weight: 700;
+            font-style: italic;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'INT Circular 2';
+            src: url('https://cdn.glitch.global/7028db6c-636a-40cc-9a9f-18237822137e/int_circular_2_tt_book-webfont.woff2?v=1730153121332') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'INT Circular 2';
+            src: url('https://cdn.glitch.global/7028db6c-636a-40cc-9a9f-18237822137e/int_circular_2_tt_book_italic-webfont.woff2?v=1730153118453') format('woff2');
+            font-weight: normal;
+            font-style: italic;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'INT Circular 2';
+            src: url('https://cdn.glitch.global/7028db6c-636a-40cc-9a9f-18237822137e/int_circular_2_tt_light-webfont.woff2?v=1730153125394') format('woff2');
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'INT Circular 2';
+            src: url('https://cdn.glitch.global/7028db6c-636a-40cc-9a9f-18237822137e/int_circular_2_tt_light_italic-webfont.woff2?v=1730153123417') format('woff2');
+            font-weight: 300;
+            font-style: italic;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'INT Circular 2';
+            src: url('https://cdn.glitch.global/7028db6c-636a-40cc-9a9f-18237822137e/int_circular_2_tt_medium-webfont.woff2?v=1730153127701') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'INT Circular 2';
+            src: url('https://cdn.glitch.global/7028db6c-636a-40cc-9a9f-18237822137e/int_circular_2_tt_thin_italic-webfont.woff2?v=1730153129733') format('woff2');
+            font-weight: 100;
+            font-style: italic;
+            font-display: swap;
+        }
+
+        /* Base Typography */
+        body {
+            font-family: 'INT Circular 2', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-weight: normal;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Typography Refinements */
+        .text-4xl {
+            font-weight: 900;
+            letter-spacing: -0.02em;
+        }
+
+        .text-xl {
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .font-semibold {
+            font-weight: 700 !important;
+        }
+
+        .font-medium {
+            font-weight: 500 !important;
+        }
+
+        .text-sm {
+            font-weight: normal;
+        }
+
+        /* Custom color classes since we're using Tailwind v2 */
+        .bg-accent {
+            background-color: #4ac1e0;
+        }
+        .hover\:bg-accent-dark:hover {
+            background-color: #3ba8c4;
+        }
+        .text-accent {
+            color: #4ac1e0;
+        }
+        .bg-accent-light {
+            background-color: rgba(74, 193, 224, 0.1);
+        }
+        .border-accent {
+            border-color: #4ac1e0;
+        }
+        .ring-accent {
+            --tw-ring-color: #4ac1e0;
+        }
+        .focus\:border-accent:focus {
+            border-color: #4ac1e0;
+        }
+        .focus\:ring-accent:focus {
+            --tw-ring-color: rgba(74, 193, 224, 0.2);
+        }
+
+        /* Form Elements */
+        select {
+            font-family: 'INT Circular 2';
+            font-weight: normal;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234ac1e0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") !important;
+            background-position: right 0.75rem center !important;
+            background-repeat: no-repeat !important;
+            background-size: 1.25em 1.25em !important;
+            padding-right: 2.5rem !important;
+        }
+
+        select::-ms-expand {
+            display: none;
+        }
+
+        /* Table Headers */
+        th {
+            font-weight: 700 !important;
+            letter-spacing: 0.02em;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4ac1e0;
+            border-radius: 3px;
+        }
+
+        /* Animation */
+        .hover-transform {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .hover-transform:hover {
+            transform: translateY(-2px);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-card {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header Section -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-gray-800">NEW HIRE LIST</h1>
+            <div class="h-1 w-24 bg-accent rounded-full mt-2"></div>
+        </div>
+        
+        <!-- Filter Controls -->
+        <div class="bg-white rounded-xl p-6 mb-8 shadow-lg hover-transform">
+            <form id="filterForm" class="space-y-4 md:space-y-0 md:flex md:gap-6">
+                <div class="flex-1">
+                    <label for="startDate" class="block text-sm font-semibold text-gray-700 mb-2">Week Starting</label>
+                    <div class="relative">
+                        <select 
+                            name="startDate" 
+                            id="startDate" 
+                            class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-base focus:border-accent focus:ring-1 focus:ring-accent">
+                            {{#each startDates}}
+                                <option value="{{this.value}}">{{this.label}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex-1">
+                    <label for="office" class="block text-sm font-semibold text-gray-700 mb-2">Office</label>
+                    <div class="relative">
+                        <select 
+                            name="office" 
+                            id="office" 
+                            class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-base focus:border-accent focus:ring-1 focus:ring-accent">
+                            {{#each offices}}
+                                <option value="{{this.id}}">{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex items-end">
+                    <button type="submit" 
+                        class="w-full md:w-auto px-6 py-3 bg-accent hover:bg-accent-dark text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200">
+                        Apply Filters
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Results Section -->
+        {{#if groupedRecords}}
+            <div class="space-y-6">
+                {{#each groupedRecords as |records role|}}
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover-transform">
+                        <div class="p-6 border-b border-gray-100">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <h2 class="text-xl font-semibold text-gray-800">{{role}}</h2>
+                                    <span class="px-3 py-1 text-sm font-medium text-accent bg-accent-light rounded-full">
+                                        {{records.length}} {{#if (eq records.length 1)}}person{{else}}people{{/if}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Desktop View -->
+                        <div class="hidden md:block overflow-x-auto table-container">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Name</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Contact Info</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Start Date</th>
+                                        <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Office</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    {{#each records}}
+                                        <tr class="hover:bg-gray-50 transition-colors duration-150">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm font-medium text-gray-900">{{this.fullName}}</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">{{this.phone}}</div>
+                                                <div class="text-sm text-accent">{{this.email}}</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">{{this.startDate}}</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-gray-900">{{this.office.name}}</div>
+                                            </td>
+                                        </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Mobile View -->
+                        <div class="md:hidden divide-y divide-gray-200">
+                            {{#each records}}
+                                <div class="p-4 space-y-2 mobile-card">
+                                    <div class="flex justify-between items-start">
+                                        <div class="font-medium text-gray-900">{{this.fullName}}</div>
+                                        <div class="text-sm text-accent">{{this.office.name}}</div>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <div class="text-sm text-gray-600">{{this.phone}}</div>
+                                        <div class="text-sm text-accent">{{this.email}}</div>
+                                    </div>
+                                    <div class="text-sm text-gray-600">
+                                        Starting: {{this.startDate}}
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        {{else}}
+            <div class="bg-white rounded-xl p-8 text-center shadow-lg hover-transform">
+                <p class="text-gray-500 text-lg">No new hires found matching the selected filters</p>
+            </div>
+        {{/if}}
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const startDate = urlParams.get('startDate');
+            const office = urlParams.get('office');
+
+            if (startDate) {
+                document.getElementById('startDate').value = startDate;
+            }
+            if (office) {
+                document.getElementById('office').value = office;
+            }
+
+            document.querySelectorAll('.hover-transform').forEach(element => {
+                element.addEventListener('touchstart', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+                element.addEventListener('touchend', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+
+        document.getElementById('filterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const startDate = document.getElementById('startDate').value;
+            const office = document.getElementById('office').value;
+            
+            const params = new URLSearchParams();
+            if (startDate) params.append('startDate', startDate);
+            if (office) params.append('office', office);
+            
+            window.location.href = `/new-hire-list?${params.toString()}`;
+        });
+    </script>
+</body>
+</html>

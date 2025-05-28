@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request to Hire</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Inline CSS for any additional styling -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #4a4a4a;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 95%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: .5rem;
+            font-weight: bold;
+        }
+
+        .form-control, .select2-container .select2-selection--single {
+            width: 100%;
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+            margin-bottom: 1rem;
+        }
+
+        .select2-container--default .select2-selection--single {
+            height: 39px; /* or adjust to match your input height */
+            padding: 6px 10px; /* adjust the vertical padding if necessary */
+            line-height: 1; /* to ensure text is vertically centered */
+            font-size: 1rem; /* to match the font size of your inputs */
+        }
+
+        .select2-container .select2-selection--single .select2-selection__rendered {
+            line-height: 1.5; /* to ensure text is vertically centered */
+            padding-left: 0; /* adjust or remove padding if necessary */
+            padding-right: 0; /* adjust or remove padding if necessary */
+            margin-top: 1; /* adjust if text is not vertically centered */
+            overflow: hidden; /* prevent text from overflowing */
+            text-overflow: ellipsis; /* add an ellipsis if the text is too long */
+            white-space: nowrap; /* prevent text from wrapping */
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 36px; /* adjust to be 2px less than your .select2-selection--single height if necessary */
+            position: absolute;
+            top: 1px; /* adjust if arrow is not vertically centered */
+            right: 1px; /* adjust if arrow is not aligned to the right side */
+            width: 20px; /* adjust width as necessary */
+        }
+
+        .select2-dropdown {
+            border-radius: .25rem;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+            box-shadow: none;
+            padding: .375rem .75rem;
+            border-radius: .25rem;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .btn-primary:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+
+        input[type="date"] {
+            cursor: pointer;
+        }
+
+        /* Additional styles for responsiveness and modal adjustments */
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+            }
+        }
+
+        /* Modal Styles and Adjustments */
+        .modal-content, #hireCandidateModal .modal-content {
+            background-color: #fefefe;
+            margin: 4% auto; /* Increased top margin */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%; /* Adjusted for wider screens */
+            max-width: 500px; /* Maximum width */
+            border-radius: 5px; /* Rounded corners */
+        }
+
+        /* Adjustments for form fields and buttons inside modals */
+        #hireCandidateModal #hireCandidateForm input[type="text"], 
+        #hireCandidateModal #hireCandidateForm input[type="email"], 
+        #hireCandidateModal #hireCandidateForm select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        #hireCandidateModal #hireCandidateForm button {
+            width: auto; /* Allow the button width to adjust based on content */
+            padding: 10px 20px; /* Slightly larger padding */
+            font-size: 18px; /* Larger font size for better readability */
+            margin-top: 10px; /* Space above the button */
+        }
+
+        /* Ensure all form inputs and buttons are consistently styled */
+        input[type="text"], input[type="email"], select, button[type="submit"] {
+            font-family: 'Helvetica Neue', Arial, sans-serif; /* Consistent font family */
+        }
+
+        #loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+            display: none; /* Initially hidden */
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Ensure the loader appears on top of everything */
+        }
+
+        #loader {
+            border: 16px solid #f3f3f3; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite; /* Spin animation */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .blur {
+            filter: blur(5px); /* Adjust the blur effect as needed */
+        }
+
+        .approval-alert {
+            display: none;
+            margin-top: -20px;
+            margin-bottom: 20px; 
+            padding: 10px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            border-radius: 4px;
+        }
+
+        /* Custom checkbox styling */
+        .custom-control {
+            position: relative;
+            display: block;
+            min-height: 1.5rem;
+            padding-left: 1.5rem;
+        }
+        
+        .custom-control-input {
+            position: absolute;
+            z-index: -1;
+            opacity: 0;
+        }
+        
+        .custom-control-label {
+            position: relative;
+            margin-bottom: 0;
+            vertical-align: top;
+            cursor: pointer;
+        }
+        
+        .custom-control-label::before {
+            position: absolute;
+            top: 0.25rem;
+            left: -1.5rem;
+            display: block;
+            width: 1rem;
+            height: 1rem;
+            pointer-events: none;
+            content: "";
+            background-color: #fff;
+            border: 1px solid #adb5bd;
+            border-radius: 0.25rem;
+        }
+        
+        .custom-control-label::after {
+            position: absolute;
+            top: 0.25rem;
+            left: -1.5rem;
+            display: block;
+            width: 1rem;
+            height: 1rem;
+            content: "";
+            background: no-repeat 50%/50% 50%;
+        }
+        
+        .custom-control-input:checked ~ .custom-control-label::before {
+            color: #fff;
+            border-color: #007bff;
+            background-color: #007bff;
+        }
+        
+        .custom-control-input:checked ~ .custom-control-label::after {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Request to Hire Form</h2>
+    <form id="requestToHireForm">
+
+        <div class="form-group" style="display: none;">
+            <label for="recruitingChannel">Recruiting Channel</label>
+            <input type="hidden" name="recruitingChannel" id="recruitingChannel">
+        </div>
+        <div class="form-group">
+            <label for="hiringManager">Hiring Manager</label>
+            <select id="hiringManager" name="hiringManager" class="form-control select2" required></select>
+        </div>
+      
+        <div class="form-group" id="referredByGroup">
+            <label for="referredBy">Recruited By</label>
+            <select id="referredBy" name="referredBy" class="form-control select2"></select>
+        </div>
+
+        <div class="form-group">
+            <label for="legalFirstName">Legal First Name</label>
+            <small id="firstNameHelp" class="form-text text-muted">Please verify with candidate this is their legal name NOT preferred name.</small>
+            <input type="text" name="legalFirstName" class="form-control" id="legalFirstName" value="{{record.firstName}}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" class="form-control" name="lastName" id="lastName" value="{{record.lastName}}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="text" class="form-control" name="phone" id="phone" value="{{record.phone}}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" name="email" id="email" value="{{record.email}}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="shirtSize">Shirt Size</label>
+            <select name="shirtSize" class="form-control select2" id="shirtSize" required>
+                <option value="">Select a Shirt Size</option>
+                <option value="Men - XS">Men - XS</option>
+                <option value="Men - S">Men - S</option>
+                <option value="Men - M">Men - M</option>
+                <option value="Men - L">Men - L</option>
+                <option value="Men - XL">Men - XL</option>
+                <option value="Men - XXL">Men - XXL</option>
+                <option value="Men - 3XL">Men - 3XL</option>
+                <option value="Men - 4XL">Men - 4XL</option>
+                <option value="Women - XS">Women - XS</option>
+                <option value="Women - S">Women - S</option>
+                <option value="Women - M">Women - M</option>
+                <option value="Women - L">Women - L</option>
+                <option value="Women - XL">Women - XL</option>
+                <option value="Women - XXL">Women - XXL</option>
+                <option value="Women - 3XL">Women - 3XL</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="role">Role</label>
+            <select class="form-control select2" name="role" id="role" required></select>
+        </div>
+      
+        <div class="form-group">
+            <label for="payscale">Payscale</label>
+            <select class="form-control select2" name="payscale" id="payscale" required></select>
+        </div>
+      
+        <div id="approvalAlert" class="approval-alert">
+            This payscale requires approval. The approvers will be notified when you submit the form.
+        </div>
+
+        <div class="form-group">
+            <label for="team">Team</label>
+            <select class="form-control select2" name="team" id="team" required></select>
+        </div>
+        
+        <div class="form-group">
+            <label for="immediateSupervisor">Immediate Supervisor</label>
+            <select class="form-control select2" name="immediateSupervisor" id="immediateSupervisor" required></select>
+        </div>
+      
+        <div class="form-group">
+            <label for="manager">Manager</label>
+            <select class="form-control select2" name="manager" id="manager" required></select>
+        </div>
+      
+        <div class="form-group">
+            <label for="areaDirector">Area Director</label>
+            <select class="form-control select2" name="areaDirector" id="areaDirector" required></select>
+        </div>
+      
+        <div class="form-group">
+            <label for="regionalDirector">Regional Director</label>
+            <select class="form-control select2" name="regionalDirector" id="regionalDirector" required></select>
+        </div>
+      
+        <div class="form-group">
+            <label for="divisionalVp">Divisional VP</label>
+            <select class="form-control select2" name="divisionalVp" id="divisionalVp" required></select>
+        </div>
+        
+        <div class="form-group">
+            <label for="startDate">Start Date</label>
+            <p>Always Start On Monday</p>
+            <input type="date" class="form-control" name="startDate" id="startDate" required>
+        </div>
+
+        <input type="hidden" name="recordId" id="recordId" value="{{record.recordId}}">
+        
+        <input type="hidden" id="requiresApproval" name="requiresApproval" value="false">
+        <input type="hidden" id="approverIds" name="approverIds" value="">
+        <input type="hidden" id="approverEmails" name="approverEmails" value="">
+        <input type="hidden" id="approverPhones" name="approverPhones" value="">
+      
+        <div class="form-group">
+            <label for="notes">Notes</label>
+            <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Enter any additional notes here..."></textarea>
+        </div>
+        
+        <!-- Added Rehire Checkbox -->
+        <div class="form-group">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="isRehire" name="isRehire">
+                <label class="custom-control-label" for="isRehire">Is this person a rehire?</label>
+            </div>
+        </div>
+        
+        {{#if officeId}}
+        <input type="hidden" name="officeRecord" id="officeRecord" value="{{officeId}}">
+        {{/if}}
+      
+        <button type="submit" class="btn btn-primary">Submit Request</button>
+    </form>
+    <br>
+    <br>
+  
+    <div id="loader-container">
+        <div id="loader"></div>
+    </div>
+</div>
+
+<!-- jQuery and Bootstrap Bundle (includes Popper) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<!-- Select2 JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<script src="https://unpkg.com/libphonenumber-js@1.9.6/bundle/libphonenumber-max.js"></script>
+<script>
+    const teamMembersInfo = new Map();
+    const rolesInfo = new Map();
+    const teamsInfo = new Map();
+    const payscalesInfo = new Map();
+
+    document.addEventListener('DOMContentLoaded', function() {
+      
+        const urlParams = new URLSearchParams(window.location.search);
+        const recordId = urlParams.get('recordId');
+        
+        // Set the recruiting channel based on indeedApply value
+        const indeedApply = {{#if record.indeedApply}}true{{else}}false{{/if}};
+        const recruitingChannelInput = document.getElementById('recruitingChannel');
+        recruitingChannelInput.value = indeedApply ? 'Indeed' : 'Individual';
+      
+      
+        $(document).ready(function() {
+            // Initialize Select2 elements
+            $('.select2').select2();
+
+            // Fetch active team members for the "Referred By" dropdown
+            fetch('/active-team-members')
+                .then(response => response.json())
+                .then(data => {
+                    const referredBySelect = document.getElementById('referredBy');
+                    referredBySelect.innerHTML = ''; // Clear existing options, if any
+
+                    // Optionally, add a default "Select" option
+                    referredBySelect.add(new Option("Select a Team Member", "", true, true));
+
+                    // Populate the select element with active team members
+                    data.teamMembers.forEach(member => {
+                        const option = new Option(member.name, member.id); // Display name, store ID
+                        referredBySelect.add(option);
+                    });
+
+                    // Re-initialize Select2 for the "Referred By" select element to refresh the UI
+                    $('#referredBy').select2();
+                })
+                .catch(error => {
+                    console.error('Error fetching active team members:', error);
+                });
+
+            fetch('/teammembers')
+                .then(response => response.json())
+                .then(data => {
+                    const hiringManagerSelect = document.getElementById('hiringManager');
+                    const immediateSupervisorSelect = document.getElementById('immediateSupervisor');
+                    const areaDirectorSelect = document.getElementById('areaDirector');
+                    const regionalDirectorSelect = document.getElementById('regionalDirector');
+                    const managerSelect = document.getElementById('manager');
+                    const divisionalVpSelect = document.getElementById('divisionalVp');
+                
+                    // Create a default "Select" option
+                    const defaultOption = new Option("Select...", "");
+                    hiringManagerSelect.add(defaultOption.cloneNode(true)); // Clone for both selects
+                    immediateSupervisorSelect.add(defaultOption.cloneNode(true));
+                    areaDirectorSelect.add(defaultOption.cloneNode(true));
+                    regionalDirectorSelect.add(defaultOption.cloneNode(true));
+                    managerSelect.add(defaultOption.cloneNode(true));
+                    divisionalVpSelect.add(defaultOption.cloneNode(true));
+
+                    data.teamMembers.sort((a, b) => a.name.localeCompare(b.name));
+                
+                    let hiringManagersInfo = {};
+
+                    // Populate the select elements with team members
+                    data.teamMembers.forEach(member => {
+                        teamMembersInfo.set(member.id, member);
+                        const option = new Option(member.name, member.id);
+                        hiringManagerSelect.add(option);
+                        immediateSupervisorSelect.add(option.cloneNode(true));
+                        managerSelect.add(option.cloneNode(true));
+                        areaDirectorSelect.add(option.cloneNode(true));
+                        regionalDirectorSelect.add(option.cloneNode(true));
+                        divisionalVpSelect.add(option.cloneNode(true));
+                    });
+                    // Re-initialize Select2 to update the UI
+                    $('.select2').select2();
+                })
+                .catch(error => {
+                    console.error('Error fetching team members:', error);
+                });
+
+            fetch('/teams')
+                .then(response => response.json())
+                .then(data => {
+                    const teamSelect = document.getElementById('team');
+                    teamSelect.innerHTML = ''; // Clear existing options
+
+                    // Sort the teams by name in alphabetical order
+                    data.teams.sort((a, b) => a.name.localeCompare(b.name));
+
+                    // Optionally, add a default "Select" option
+                    teamSelect.add(new Option("Select...", "", true, true));
+
+                    // Populate the select element with sorted teams
+                    data.teams.forEach(team => {
+                        teamsInfo.set(team.id, team);
+                        const option = new Option(team.name, team.id);
+                        teamSelect.add(option);
+                    });
+
+                    // Re-initialize Select2 for the team select element
+                    $('#team').select2();
+                })
+                .catch(error => {
+                    console.error('Error fetching teams:', error);
+                });
+
+            fetch('/roles')
+                .then(response => response.json())
+                .then(data => {
+                    const roleSelect = document.getElementById('role');
+                    roleSelect.innerHTML = ''; // Clear existing options, if any
+
+                    // Optionally, add a default "Select" option
+                    roleSelect.add(new Option("Select a Role", "", true, true));
+
+                    // Sort roles by name alphabetically if desired
+                    data.roles.sort((a, b) => a.name.localeCompare(b.name));
+
+                    // Populate the select element with roles
+                    data.roles.forEach(role => {
+                        rolesInfo.set(role.freshserviceId, role); // Store full role info
+                        const option = new Option(role.name, role.freshserviceId); // Use freshserviceId as the option value
+                        roleSelect.add(option);
+                    });
+
+                    // Re-initialize Select2 for the role select element to refresh the UI
+                    $('#role').select2();
+                })
+                .catch(error => {
+                    console.error('Error fetching roles:', error);
+                });
+                
+            fetch('/payscales')
+                .then(response => response.json())
+                .then(data => {
+                    const payscaleSelect = document.getElementById('payscale');
+                    payscaleSelect.innerHTML = ''; // Clear existing options
+                    
+                    // Add default option
+                    payscaleSelect.add(new Option("Select a Payscale", "", true, true));
+                    
+                    // Sort payscales alphabetically
+                    data.payscales.sort((a, b) => a.name.localeCompare(b.name));
+                    
+                    // Populate dropdown with payscales
+                    data.payscales.forEach(payscale => {
+                        payscalesInfo.set(payscale.id, payscale);
+                        const option = new Option(payscale.name, payscale.id);
+                        payscaleSelect.add(option);
+                    });
+                    
+                    // Re-initialize Select2
+                    $('#payscale').select2();
+                })
+                .catch(error => {
+                    console.error('Error fetching payscales:', error);
+                });
+        });
+
+        $('#team').on('change', function() {
+            const selectedTeamId = $(this).val(); // Get the selected team ID
+            prepopulateTeamFields(selectedTeamId); // Updated function name for better clarity
+        });
+        
+        // Add an event listener for payscale selection
+        $('#payscale').on('change', function() {
+            const selectedPayscaleId = $(this).val();
+            handlePayscaleSelection(selectedPayscaleId);
+        });
+        
+        // Add an event listener for role selection
+        $('#role').on('change', function() {
+            const selectedRoleId = $(this).val();
+            if (!selectedRoleId) return; // If no role is selected, do nothing
+            
+            // Find the selected role in rolesInfo
+            const selectedRole = rolesInfo.get(selectedRoleId);
+            if (!selectedRole || !selectedRole.payscale || selectedRole.payscale.length === 0) {
+                return; // Exit if no payscale is linked to this role
+            }
+            
+            // Get the first (and likely only) payscale ID
+            const payscaleId = selectedRole.payscale[0]; 
+            
+            // Auto-select the payscale in the dropdown
+            $('#payscale').val(payscaleId).trigger('change');
+        });
+
+        function prepopulateTeamFields(selectedTeamId) {
+            const selectedTeam = teamsInfo.get(selectedTeamId);
+            if (!selectedTeam) {
+                console.error('Selected team not found in teamsInfo');
+                return;
+            }
+
+            // Immediate Supervisor
+            const salesManagerId = selectedTeam.salesManager && selectedTeam.salesManager.length > 0 ? selectedTeam.salesManager[0] : null;
+            if (salesManagerId) {
+                $('#immediateSupervisor').val(salesManagerId).trigger('change');
+            }
+            
+            // Manager
+            const managerId = selectedTeam.salesManager && selectedTeam.manager.length > 0 ? selectedTeam.manager[0] : null;
+            if (managerId) {
+                $('#manager').val(managerId).trigger('change');
+            }
+
+            // Area Director
+            const areaDirectorId = selectedTeam.areaDirector && selectedTeam.areaDirector.length > 0 ? selectedTeam.areaDirector[0] : null;
+            if (areaDirectorId) {
+                $('#areaDirector').val(areaDirectorId).trigger('change');
+            }
+
+            // Regional Director
+            const regionalDirectorId = selectedTeam.regionalDirector && selectedTeam.regionalDirector.length > 0 ? selectedTeam.regionalDirector[0] : null;
+            if (regionalDirectorId) {
+                $('#regionalDirector').val(regionalDirectorId).trigger('change');
+            }
+            
+            // Divisional VP
+            const divisionalVpId = selectedTeam.divisionalVp && selectedTeam.divisionalVp.length > 0 ? selectedTeam.divisionalVp[0] : null;
+            if (divisionalVpId) {
+                $('#divisionalVp').val(divisionalVpId).trigger('change');
+            }  
+        }
+        
+        // Function to handle payscale selection and approver lookup
+        function handlePayscaleSelection(selectedPayscaleId) {
+            const selectedPayscale = payscalesInfo.get(selectedPayscaleId);
+            if (!selectedPayscale) {
+                console.error('Selected payscale not found in payscalesInfo');
+                return;
+            }
+            
+            // Reset approver fields
+            $('#requiresApproval').val(selectedPayscale.requiresApproval);
+            $('#approverIds').val('');
+            $('#approverEmails').val('');
+            $('#approverPhones').val('');
+            
+            // Show or hide approval alert
+            const approvalAlert = document.getElementById('approvalAlert');
+            if (selectedPayscale.requiresApproval && selectedPayscale.approver && selectedPayscale.approver.length > 0) {
+                approvalAlert.style.display = 'block';
+            } else {
+                approvalAlert.style.display = 'none';
+            }
+            
+            // If no approval required or no approvers, exit early
+            if (!selectedPayscale.requiresApproval || !selectedPayscale.approver || selectedPayscale.approver.length === 0) {
+                return;
+            }
+            
+            // Collect approver IDs
+            const approverIds = selectedPayscale.approver;
+            $('#approverIds').val(approverIds.join(','));
+            
+            // Look up approver contact details from teamMembersInfo
+            const approverEmails = [];
+            const approverPhones = [];
+            
+            approverIds.forEach(approverId => {
+                if (teamMembersInfo.has(approverId)) {
+                    const approver = teamMembersInfo.get(approverId);
+                    if (approver.email) approverEmails.push(approver.email);
+                    if (approver.phone) approverPhones.push(approver.phone);
+                }
+            });
+            
+            $('#approverEmails').val(approverEmails.join(','));
+            $('#approverPhones').val(approverPhones.join(','));
+        }
+    });
+
+    function formatPhoneNumberToE164(phoneNumber) {
+        try {
+            const parsedNumber = libphonenumber.parsePhoneNumber(phoneNumber, 'US');
+            return parsedNumber.format('E.164');
+        } catch (error) {
+            console.error('Error formatting phone number:', error);
+            return null;
+        }
+    }
+
+    document.getElementById('requestToHireForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+
+        // Format phone number
+        const phoneInput = document.getElementById('phone');
+        const formattedPhoneNumber = formatPhoneNumberToE164(phoneInput.value);
+
+        if (!formattedPhoneNumber) {
+            alert('Please enter a valid phone number.');
+            return;
+        }
+
+        document.getElementById('loader-container').style.display = 'flex';
+        document.querySelector('.container').classList.add('blur');
+
+        const formData = new FormData(event.target);
+        const formObject = {};
+
+        formData.forEach(function(value, key){
+            formObject[key] = value;
+        });
+
+        // Explicitly set the isRehire value to ensure it's always included (true/false)
+        formObject['isRehire'] = document.getElementById('isRehire').checked;
+
+        // Replace the original phone number with the formatted one
+        formObject['phone'] = formattedPhoneNumber;
+
+        const referredById = document.getElementById('referredBy').value;
+
+        // Retrieve and add the detailed information for the "Referred By" team member
+        if (teamMembersInfo.has(referredById)) {
+            const referredByInfo = teamMembersInfo.get(referredById);
+            formObject['referredByInfo'] = referredByInfo;
+        }
+
+        // Retrieve full info of the selected Hiring Manager and Immediate Supervisor
+        const hiringManagerId = formObject['hiringManager'];
+        const immediateSupervisorId = formObject['immediateSupervisor'];
+
+        if(teamMembersInfo.has(hiringManagerId)) {
+            formObject['hiringManagerInfo'] = teamMembersInfo.get(hiringManagerId);
+        }
+        if(teamMembersInfo.has(immediateSupervisorId)) {
+            formObject['immediateSupervisorInfo'] = teamMembersInfo.get(immediateSupervisorId);
+        }
+
+        // Retrieve full info of the selected Role, Team, and Payscale
+        const selectedRoleId = formObject['role'];
+        const selectedTeamId = formObject['team']; 
+        const selectedPayscaleId = formObject['payscale'];
+
+        if(teamsInfo.has(selectedTeamId)) {
+            formObject['teamInfo'] = teamsInfo.get(selectedTeamId);
+        }
+
+        if(rolesInfo.has(selectedRoleId)) {
+            formObject['roleInfo'] = rolesInfo.get(selectedRoleId);
+        }
+        
+        if(payscalesInfo.has(selectedPayscaleId)) {
+            formObject['payscaleInfo'] = payscalesInfo.get(selectedPayscaleId);
+        }
+        
+        // Add approval information to the form object
+        formObject['requiresApproval'] = document.getElementById('requiresApproval').value === 'true';
+        formObject['approverIds'] = document.getElementById('approverIds').value.split(',').filter(id => id.trim() !== '');
+        formObject['approverEmails'] = document.getElementById('approverEmails').value.split(',').filter(email => email.trim() !== '');
+        formObject['approverPhones'] = document.getElementById('approverPhones').value.split(',').filter(phone => phone.trim() !== '');
+        
+        console.log('Sending data to server:', JSON.stringify(formObject));
+
+        const requestBody = JSON.stringify(formObject);
+
+        const endpoints = [
+            '/combined-request-hire-and-org-log-create',
+
+        ];
+
+        const fetchPromises = endpoints.map(endpoint => 
+            fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: requestBody
+            })
+        );
+
+        // Use Promise.all to wait for all fetch calls to complete
+        Promise.all(fetchPromises)
+        .then(responses => {
+            // Check each response for success
+            for (const response of responses) {
+                if (!response.ok) {
+                    throw new Error(`A network response was not ok: ${response.statusText}`);
+                }
+            }
+            return Promise.all(responses.map(response => response.json()));
+        })
+        .then(data => {
+            document.getElementById('loader-container').style.display = 'none';
+            document.querySelector('.container').classList.remove('blur');
+            // Handle success
+            console.log('Success:', data);
+            const legalFirstName = encodeURIComponent(formObject.legalFirstName);
+            const lastName = encodeURIComponent(formObject.lastName);
+            const email = encodeURIComponent(formObject.email);
+            const phone = encodeURIComponent(formObject.phone);
+            const team = encodeURIComponent(formObject.teamInfo.name);
+
+            const calendlyUrl = `https://calendly.com/ashley-curtis-1/onboarding-meeting-purelight-power?name=${legalFirstName}%20${lastName}&email=${email}&a1=1${phone}&a2=${team}`;
+
+            window.location.href = calendlyUrl;
+        })
+        .catch((error) => {
+            document.getElementById('loader-container').style.display = 'none';
+            document.querySelector('.container').classList.remove('blur');
+            // Handle error
+            console.error('Error:', error);
+        });
+    });
+</script>
+</body>
+</html>

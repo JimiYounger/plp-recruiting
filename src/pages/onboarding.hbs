@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding Candidates</title>
+<style>
+    :root {
+        --primary-color: #007AFF;
+        --background-color: #F2F2F7;
+        --card-background: #FFFFFF;
+        --text-color: #1C1C1E;
+        --secondary-text-color: #6E6E73;
+        --border-color: #E5E5EA;
+        --success-color: #34C759;
+        --error-color: #FF3B30;
+    }
+    body, html {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.5;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    header img {
+        max-width: 200px;
+        margin-bottom: 20px;
+    }
+    h1 {
+        font-weight: 300;
+        font-size: 36px;
+        margin-bottom: 20px;
+    }
+    .controls {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    .filters-and-sort {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .filters, .sort {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    select, button {
+        padding: 10px 15px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background-color: var(--card-background);
+        font-size: 16px;
+    }
+    button {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.3s ease;
+    }
+    button:hover {
+        opacity: 0.8;
+    }
+    .candidate-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    .candidate-card {
+        background-color: var(--card-background);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .candidate-name {
+        font-size: 24px;
+        font-weight: 500;
+        margin-bottom: 10px;
+    }
+    .candidate-info {
+        font-size: 14px;
+        color: var(--secondary-text-color);
+        margin-bottom: 15px;
+    }
+    .status-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .status-button {
+        padding: 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        text-align: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .status-button.true {
+        background-color: var(--success-color);
+        color: white;
+    }
+    .status-button.false, .status-button.failure-to-launch {
+        background-color: var(--error-color);
+        color: white;
+    }
+    .contact-icons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 10px;
+    }
+    .contact-icons img {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+        background-color: var(--card-background);
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 12px;
+        width: 80%;
+        max-width: 500px;
+    }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .close:hover, .close:focus {
+        color: #000;
+        text-decoration: none;
+    }
+    #reasonText {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+    }
+    #submitReason {
+        margin-top: 10px;
+        padding: 10px 20px;
+    }
+    .search-container {
+        position: relative;
+        width: 100%;
+    }
+    #searchInput {
+        width: 100%;
+        padding: 10px 30px 10px 10px;
+        font-size: 16px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-sizing: border-box;
+    }
+    .autocomplete-results {
+        position: absolute;
+        background-color: white;
+        width: 100%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        max-height: 200px;
+        overflow-y: auto;
+        display: none;
+        z-index: 1;
+    }
+    .autocomplete-item {
+        padding: 10px;
+        cursor: pointer;
+    }
+    .autocomplete-item:hover {
+        background-color: #f0f0f0;
+    }
+    .clear-search {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        color: #999;
+        display: none;
+    }
+    .clear-search:hover {
+        color: #333;
+    }
+    
+      .schedule-it-call {
+        background-color: #FF9500; /* Example color */
+        color: white;
+    }
+
+    .schedule-it-call:hover {
+        opacity: 0.8;
+    }
+  
+        .import-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: var(--primary-color);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 16px;
+        margin-top: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+    .import-button:hover {
+        background-color: #005ecb; /* A slightly darker shade for hover effect */
+    }
+  
+    @media (max-width: 768px) {
+        .filters-and-sort {
+            flex-direction: column;
+        }
+        .filters, .sort {
+            width: 100%;
+        }
+        select, button {
+            width: 100%;
+        }
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="https://cdn.glitch.global/d1a498f5-46b5-4cb0-8d70-9011d7b99de2/PLP%20Logo.png?v=1705445568021" alt="Purelight Power Logo">
+            <h1>Onboarding Candidates</h1>
+             <a href="/csv-upload" class="import-button">Import Candidates</a>
+        </header>
+
+        <div class="controls">
+
+    <div class="filters-and-sort">
+        <div class="filters">
+            <select id="startDateFilter">
+                <option value="">All Start Dates</option>
+                {{#each uniqueStartDates}}
+                <option value="{{this}}">{{this}}</option>
+                {{/each}}
+            </select>
+            <select id="officeFilter">
+                <option value="">All Offices</option>
+                {{#each officeOptions}}
+                <option value="{{this}}">{{this}}</option>
+                {{/each}}
+            </select>
+            <select id="statusFilter">
+                <option value="">All Statuses</option>
+                {{#each statuses}}
+                <option value="{{this}}">{{this}}</option>
+                {{/each}}
+            </select>
+            <button id="applyFilters">Apply Filters</button>
+        </div>
+        <div class="sort">
+            <select id="sortSelect">
+                <option value="name">Sort by Name</option>
+                <option value="office">Sort by Office</option>
+            </select>
+            <button id="applySort">Apply Sort</button>
+        </div>
+    </div>
+          
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Search by name...">
+      <button id="clearSearch" class="clear-search" aria-label="Clear search">&times;</button>
+      <div id="autocompleteResults" class="autocomplete-results"></div>
+    </div>
+          
+</div>
+
+        <div id="candidateList" class="candidate-list">
+            {{#each candidates}}
+            <div class="candidate-card" data-status="{{this.status}}" data-office="{{this.officeName}}" data-name="{{this.fullName}}" data-freshservice-payload="{{this.freshservicePayload}}" data-first-name="{{this.firstName}}" data-last-name="{{this.lastName}}" data-email="{{this.email}}" data-phone="{{this.phone}}">
+                <div class="candidate-name">{{this.fullName}}</div>
+                <div class="candidate-info">
+                    <p>Email: {{this.email}}</p>
+                    <p>Phone: {{this.phone}}</p> 
+                    <p>Office: {{this.officeName}}</p>
+                    <p>Role: {{this.roleAbbreviation}}</p>
+                    <p>Requester: {{this.onboardingRequester}}</p>
+                    <p>Start Date: {{this.startDate}}</p>
+                    <p>Status: {{this.status}}</p>
+                </div>
+                <div class="status-buttons">
+                    <div class="status-button {{#if candidatePacketComplete}}true{{else}}false{{/if}}" data-field="Candidate Packet Complete" data-id="{{id}}">Candidate Packet</div>
+                    <div class="status-button {{#if backgroundCheckAuthorized}}true{{else}}false{{/if}}" data-field="Background Check Authorized" data-id="{{id}}">Background Check Authorized</div>
+                    <div class="status-button {{#if onboardingInitiated}}true{{else}}false{{/if}}" data-field="Onboarding Initiated" data-id="{{id}}">Onboarding Initiated</div>
+                    <div class="status-button {{#if onboardingPacketComplete}}true{{else}}false{{/if}}" data-field="Onboarding Packet Complete" data-id="{{id}}">Onboarding Packet</div>
+                    <div class="status-button {{#if hired}}true{{else}}false{{/if}}" data-field="Hired" data-id="{{id}}" onclick="openHiredModal(this)">Hired</div>
+                    <div class="status-button failure-to-launch" data-id="{{id}}">Failure To Launch</div>
+                    <div class="status-button schedule-it-call" data-id="{{id}}">Schedule IT Call</div>
+                </div>
+              <br>
+                <div class="contact-icons">
+                    <a href="tel:+1{{this.phone}}"><img src="https://cdn.glitch.global/d1a498f5-46b5-4cb0-8d70-9011d7b99de2/Icons-02.svg?v=1705616374477" alt="Phone" width="24"></a>
+                    <a href="sms:+1{{this.phone}}"><img src="https://cdn.glitch.global/d1a498f5-46b5-4cb0-8d70-9011d7b99de2/Icons-04.svg?v=1705616374710" alt="SMS" width="24"></a>
+                    {{#if this.gChatUrl}}
+                    <a href="#" class="gchat-link" data-url="{{this.gChatUrl}}">
+                        <img src="https://cdn.glitch.global/7028db6c-636a-40cc-9a9f-18237822137e/Google%20Chat%20Logo.png?v=1725563348312" alt="GChat" width="24">
+                    </a>
+                    {{/if}}
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+   
+
+    <!-- Modal -->
+    <div id="failureModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Failure To Launch</h2>
+            <label for="reasonText">Reason For Failure To Launch:</label>
+            <textarea id="reasonText" rows="4"></textarea>
+            <button id="submitReason">Submit</button>
+        </div>
+    </div>
+  
+  <!-- Hired Modal -->
+<div id="hiredModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeHiredModal()">&times;</span>
+        <h2>Confirm Hiring Details</h2>
+        <form id="hiredForm">
+            <input type="hidden" id="hiredRecordId">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" required>
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required>
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" name="phone" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate" name="startDate" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const candidateList = document.getElementById('candidateList');
+    const sortSelect = document.getElementById('sortSelect');
+    const applySort = document.getElementById('applySort');
+    const searchInput = document.getElementById('searchInput');
+    const autocompleteResults = document.getElementById('autocompleteResults');
+    const clearSearchBtn = document.getElementById('clearSearch');
+    let candidates = Array.from(candidateList.children);
+
+    // Existing filter functionality
+    document.getElementById('applyFilters').addEventListener('click', filterCandidates);
+
+    // New sorting functionality
+    applySort.addEventListener('click', sortCandidates);
+
+    function sortCandidates() {
+        const sortBy = sortSelect.value;
+        const candidates = Array.from(candidateList.children);
+        
+        candidates.sort((a, b) => {
+            if (sortBy === 'office') {
+                const officeA = a.dataset.office.toLowerCase();
+                const officeB = b.dataset.office.toLowerCase();
+                if (officeA === officeB) {
+                    // If offices are the same, sort alphabetically by name
+                    return a.dataset.name.localeCompare(b.dataset.name);
+                }
+                return officeA.localeCompare(officeB);
+            } else {
+                // Sort alphabetically by name
+                return a.dataset.name.localeCompare(b.dataset.name);
+            }
+        });
+
+        // Reappend sorted candidates
+        candidates.forEach(candidate => candidateList.appendChild(candidate));
+    }
+
+    function filterCandidates() {
+        const startDate = document.getElementById('startDateFilter').value;
+        const office = document.getElementById('officeFilter').value;
+        const status = document.getElementById('statusFilter').value;
+
+        const candidates = document.querySelectorAll('.candidate-card');
+
+        candidates.forEach(candidate => {
+            const candidateStartDate = candidate.querySelector('p:nth-child(5)').textContent.split(': ')[1].trim();
+            const candidateOffice = candidate.dataset.office;
+            const candidateStatus = candidate.dataset.status;
+
+            const matchesStartDate = !startDate || candidateStartDate === startDate;
+            const matchesOffice = !office || candidateOffice === office;
+            const matchesStatus = !status || candidateStatus === status;
+
+            if (matchesStartDate && matchesOffice && matchesStatus) {
+                candidate.style.display = 'block';
+            } else {
+                candidate.style.display = 'none';
+            }
+        });
+    }
+
+    // Existing button toggle functionality
+    document.querySelectorAll('.status-button').forEach(button => {
+    button.addEventListener('click', async function () {
+        const recordId = this.dataset.id;
+        const field = this.dataset.field;
+        const currentValue = this.classList.contains('true');
+        const newValue = !currentValue;
+
+        if (!recordId) {
+            console.error("Record ID is missing");
+            return;
+        }
+
+        const updateData = { 
+            recordId, 
+            field, 
+            value: newValue 
+        };
+
+        // Handle status changes only for 'Onboarding Initiated'
+        if (field === 'Onboarding Initiated') {
+            updateData.status = newValue ? 'Onboarding Initiated' : 'Request To Onboard';
+        }
+
+        const response = await fetch('/update-status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updateData)
+        });
+
+        if (response.ok) {
+            this.classList.toggle('true', newValue);
+            this.classList.toggle('false', !newValue);
+
+            // Update the status display only for 'Onboarding Initiated'
+            if (field === 'Onboarding Initiated') {
+                const statusElement = this.closest('.candidate-card').querySelector('p:last-child');
+                if (statusElement) {
+                    statusElement.textContent = `Status: ${newValue ? 'Onboarding Initiated' : 'Request To Onboard'}`;
+                }
+            }
+        } else {
+            alert('Failed to update status');
+        }
+    });
+});
+    // Failure To Launch functionality
+    const modal = document.getElementById('failureModal');
+    const closeBtn = document.getElementsByClassName('close')[0];
+    const submitReasonBtn = document.getElementById('submitReason');
+    let currentCandidateId = null;
+
+    document.querySelectorAll('.failure-to-launch').forEach(button => {
+        button.addEventListener('click', function() {
+            currentCandidateId = this.dataset.id;
+            modal.style.display = 'block';
+        });
+    });
+
+    closeBtn.onclick = function() {
+        modal.style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    submitReasonBtn.addEventListener('click', async function() {
+        const reason = document.getElementById('reasonText').value;
+        if (!reason) {
+            alert('Please provide a reason for Failure To Launch');
+            return;
+        }
+
+        const response = await fetch('/update-status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                recordId: currentCandidateId,
+                status: 'Failure To Launch',
+                disqualified: true,
+                reasonForDisqualification: reason
+            })
+        });
+
+        if (response.ok) {
+            alert('Status updated successfully');
+            modal.style.display = 'none';
+            // Update the UI to reflect the change
+            const candidateCard = document.querySelector(`.candidate-card [data-id="${currentCandidateId}"]`).closest('.candidate-card');
+            candidateCard.querySelector('p:last-child').textContent = 'Status: Failure To Launch';
+            // You might want to update other UI elements as needed
+        } else {
+            alert('Failed to update status');
+        }
+    });
+
+    // GChat functionality
+    document.querySelectorAll('.gchat-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.dataset.url;
+            if (url) {
+                window.open(url, '_blank');
+            } else {
+                alert('GChat URL is not available for this candidate.');
+            }
+        });
+    });
+
+    // Search functionality
+    searchInput.addEventListener('input', handleSearch);
+    searchInput.addEventListener('keyup', function(e) {
+        if (e.key === 'Escape') {
+            clearSearch();
+        }
+    });
+
+    clearSearchBtn.addEventListener('click', clearSearch);
+
+    function handleSearch() {
+        const searchTerm = searchInput.value.toLowerCase();
+        clearSearchBtn.style.display = searchTerm.length > 0 ? 'block' : 'none';
+        if (searchTerm.length === 0) {
+            autocompleteResults.style.display = 'none';
+            showAllCandidates();
+            return;
+        }
+
+        const matchingNames = candidates
+            .map(candidate => candidate.dataset.name)
+            .filter(name => name.toLowerCase().includes(searchTerm));
+
+        displayAutocompleteResults(matchingNames);
+        filterCandidatesBySearch(searchTerm);
+    }
+
+    function displayAutocompleteResults(names) {
+        autocompleteResults.innerHTML = '';
+        if (names.length === 0) {
+            autocompleteResults.style.display = 'none';
+            return;
+        }
+
+        names.forEach(name => {
+            const div = document.createElement('div');
+            div.textContent = name;
+            div.className = 'autocomplete-item';
+            div.addEventListener('click', () => {
+                searchInput.value = name;
+                autocompleteResults.style.display = 'none';
+                filterCandidatesBySearch(name);
+            });
+            autocompleteResults.appendChild(div);
+        });
+
+        autocompleteResults.style.display = 'block';
+    }
+
+    function filterCandidatesBySearch(searchTerm) {
+        candidates.forEach(candidate => {
+            const name = candidate.dataset.name.toLowerCase();
+            if (name.includes(searchTerm.toLowerCase())) {
+                candidate.style.display = 'block';
+            } else {
+                candidate.style.display = 'none';
+            }
+        });
+    }
+
+    function showAllCandidates() {
+        candidates.forEach(candidate => {
+            candidate.style.display = 'block';
+        });
+    }
+
+    function clearSearch() {
+        searchInput.value = '';
+        autocompleteResults.style.display = 'none';
+        showAllCandidates();
+        clearSearchBtn.style.display = 'none';
+    }
+
+    // Add click event listener to the document to close autocomplete when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !autocompleteResults.contains(e.target)) {
+            autocompleteResults.style.display = 'none';
+        }
+    });
+});
+      
+function openHiredModal(button) {
+    const recordId = button.dataset.id;
+    const card = button.closest('.candidate-card');
+    const payloadString = card.dataset.freshservicePayload;
+
+    // Check if there's a valid Freshservice Payload
+    if (payloadString && payloadString !== '{}') {
+        const payload = JSON.parse(payloadString);
+        const modal = document.getElementById('hiredModal');
+
+        document.getElementById('hiredRecordId').value = recordId;
+        document.getElementById('firstName').value = payload.FirstName || '';
+        document.getElementById('lastName').value = payload.LastName || '';
+        document.getElementById('phone').value = payload.PhoneNumber || '';
+        document.getElementById('email').value = payload.EmployeePersonalEmail || '';
+        document.getElementById('startDate').value = payload.StartDate ? payload.StartDate.split('T')[0] : '';
+
+        modal.style.display = 'block';
+    } else {
+        // If no valid payload, directly update the 'Hired' status
+        updateHiredStatus(recordId, button);
+    }
+}
+
+function closeHiredModal() {
+    const modal = document.getElementById('hiredModal');
+    modal.style.display = 'none';
+}
+
+async function updateHiredStatus(recordId, button) {
+    try {
+        const response = await fetch('/update-status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                recordId: recordId,
+                field: 'Hired',
+                value: true,
+                status: 'Hired'
+            })
+        });
+
+        if (response.ok) {
+            button.classList.add('true');
+            button.classList.remove('false');
+            
+            // Update the status display
+            const statusElement = button.closest('.candidate-card').querySelector('p:last-child');
+            if (statusElement) {
+                statusElement.textContent = 'Status: Hired';
+            }
+
+            alert('Candidate marked as hired successfully');
+        } else {
+            alert('Failed to update hired status');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while updating hired status');
+    }
+}
+
+// Modify the existing event listener for the 'Hired' button
+document.querySelectorAll('.status-button[data-field="Hired"]').forEach(button => {
+    button.addEventListener('click', function() {
+        openHiredModal(this);
+    });
+});
+
+// Add event listener for the hired form submission
+// Add event listener for the hired form submission
+document.getElementById('hiredForm').addEventListener('submit', async function(e) {
+    e.preventDefault(); // Prevent the default form submission behavior
+
+    const formData = new FormData(this); // Get the form data
+    const recordId = document.getElementById('hiredRecordId').value; // Get the record ID
+    const payload = {
+        recordId: recordId,
+        FirstName: formData.get('firstName'),
+        LastName: formData.get('lastName'),
+        PhoneNumber: formData.get('phone'),
+        EmployeePersonalEmail: formData.get('email'),
+        StartDate: formData.get('startDate')
+    };
+
+    try {
+        // Send the data to the server to update Airtable and webhook
+        const response = await fetch('/update-freshservice-payload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            // Optional: Remove the alert to allow immediate redirection
+            // alert('Hiring details updated successfully');
+
+            closeHiredModal(); // Close the modal
+
+            // Update the UI to reflect the change
+            const hiredButton = document.querySelector(`.status-button[data-id="${recordId}"][data-field="Hired"]`);
+            hiredButton.classList.add('true');
+            hiredButton.classList.remove('false');
+            
+            // Update the status display
+            const statusElement = hiredButton.closest('.candidate-card').querySelector('p:last-child');
+            if (statusElement) {
+                statusElement.textContent = 'Status: Hired';
+            }
+
+            // **Redirection to Calendly with URL Parameters**
+            
+            // Extract the necessary data from the form
+            const legalFirstName = payload.FirstName;
+            const lastName = payload.LastName;
+            const email = payload.EmployeePersonalEmail;
+            const phone = payload.PhoneNumber;
+
+            // Encode the parameters to ensure the URL is valid
+            const encodedFirstName = encodeURIComponent(legalFirstName);
+            const encodedLastName = encodeURIComponent(lastName);
+            const encodedEmail = encodeURIComponent(email);
+            const encodedPhone = encodeURIComponent(phone);
+
+            // Construct the Calendly URL with the encoded parameters
+            const calendlyUrl = `https://calendly.com/d/cpqt-7p8-3s3/tools-software-onboarding-purelight-power?name=${encodedFirstName}%20${encodedLastName}&email=${encodedEmail}&a1=1${encodedPhone}`;
+
+            // Redirect the user to the Calendly URL
+            window.location.href = calendlyUrl;
+
+        } else {
+            alert('Failed to update hiring details');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while updating hiring details');
+    }
+});
+
+document.querySelectorAll('.schedule-it-call').forEach(button => {
+    button.addEventListener('click', function() {
+        const recordId = this.dataset.id;
+        const candidateCard = this.closest('.candidate-card');
+        
+        // Retrieve data from separate data attributes
+        const firstName = candidateCard.dataset.firstName || '';
+        const lastName = candidateCard.dataset.lastName || '';
+        const email = candidateCard.dataset.email || '';
+        const phone = candidateCard.dataset.phone || '';
+        
+        // Validate required fields
+        if (!firstName || !lastName || !email || !phone) {
+            alert('Insufficient data to schedule IT Call.');
+            return;
+        }
+        
+        // Encode the parameters to ensure the URL is valid
+        const encodedFirstName = encodeURIComponent(firstName);
+        const encodedLastName = encodeURIComponent(lastName);
+        const encodedEmail = encodeURIComponent(email);
+        const encodedPhone = encodeURIComponent(phone);
+        
+        // Construct the Calendly URL
+        const calendlyUrl = `https://calendly.com/d/cpqt-7p8-3s3/tools-software-onboarding-purelight-power?name=${encodedFirstName}%20${encodedLastName}&email=${encodedEmail}&a1=${encodedPhone}`;
+        
+        // Redirect the user to the Calendly URL
+        window.location.href = calendlyUrl;
+    });
+});
+
+      
+</script>
+</body>
+</html>

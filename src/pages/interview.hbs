@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outside Sales Interview Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #4a4a4a;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 95%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            font-size: 18px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .instructions {
+            margin-bottom: 15px;
+            font-style: italic;
+            color: #666;
+        }
+
+        .question {
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .yes-no-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .yes-no-buttons button {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+        }
+
+        .yes-button { background-color: #4CAF50; } /* Green */
+        .no-button { background-color: #f44336; } /* Red */
+
+        #submitFormButton {
+            width: 100%;
+            padding: 15px;
+            background-color: #4ac1e0; /* Light blue */
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .yes-no-buttons {
+                flex-direction: column;
+            }
+
+            .yes-no-buttons button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            #submitFormButton {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Outside Sales Interview Form</h1>
+      <h3>Candidate Name: {{firstName}} {{lastName}}</h3>
+      {{friendlyDate}}
+        <form id="interviewForm">
+            <div class="section-header">Introduction & Ice Breaker</div>
+            <div class="instructions">Welcome the candidate, introduce yourself, and outline the interview process.</div>
+            
+            <div class="question">1. How does your past experience make you a good fit for this position?:</div>
+            <textarea name="question1" required></textarea>
+
+            <div class="question">2. Tell me about your understanding of the role:</div>
+            <textarea name="question2" required></textarea>
+
+            <div class="section-header">Passion & Drive</div>
+            <div class="instructions">Discuss the candidate's passion, purpose, and ability to overcome challenges.</div>
+
+            <div class="question">3. What was the last thing you failed at?</div>
+            <textarea name="question3" required></textarea>
+
+            <div class="question">4. What did you learn from that experience?</div>
+            <textarea name="question4" required></textarea>
+
+            <div class="section-header">Vision & Goals</div>
+            <div class="instructions">Explore the candidate's vision and goals, and how they align with the company's mission.</div>
+
+            <div class="question">5. Do you enjoy working within a team environment? Please give examples:</div>
+            <textarea name="question5" required></textarea>
+
+            <div class="section-header">Risk-Taking & Persistence</div>
+            <div class="instructions">Assess the candidate's willingness to take risks and their persistence.</div>
+
+            <div class="question">6. Tell me about a time you took a significant risk and believed in yourself:</div>
+            <textarea name="question6" required></textarea>
+
+            <div class="question">7. What was the outcome of that risk?</div>
+            <textarea name="question7" required></textarea>
+
+            <div class="section-header">Motivation & Independence</div>
+            <div class="instructions">Gauge the candidate's self-motivation, energy, and independence.</div>
+
+            <div class="question">8. What are your career goals?</div>
+            <textarea name="question8" required></textarea>
+
+            <div class="question">9. What motivates you to succeed?</div>
+            <textarea name="question9" required></textarea>
+
+            <div class="section-header">Pay Layout and Job Expectations</div>
+            <div class="instructions">Clarify compensation structure and job expectations.</div>
+
+            <div class="question">10. Does this pay structure make sense to you?</div>
+            <textarea name="question10" required></textarea>
+
+            <div class="question">11. Do you have any questions regarding the pay structure?</div>
+            <textarea name="question11" required></textarea>
+
+            <div class="question">12. Do you have any questions about the performance metrics and job expectations?</div>
+            <textarea name="question12" required></textarea>
+
+            <div class="question">13. Are you comfortable with the proposed pay layout?</div>
+            <textarea name="question13" required></textarea>
+
+            <div class="section-header">Interview Wrap-Up</div>
+            <div class="instructions">Conclude the interview by discussing the next steps and verifying eligibility based on certain criteria.</div>
+
+                        <!-- Question 1 -->
+            <div class="question">Do you have an Insurance Approved Driving Record?</div>
+            <div class="yes-no-buttons" data-question="insuranceApprovedDrivingRecord">
+                <button type="button" class="yes-button">Yes</button>
+                <button type="button" class="no-button">No</button>
+                <input type="hidden" name="insuranceApprovedDrivingRecord" value="">
+            </div>
+
+            <!-- Question 2 -->
+            <div class="question">Do you have Car Insurance?</div>
+            <div class="yes-no-buttons" data-question="carInsurance">
+                <button type="button" class="yes-button">Yes</button>
+                <button type="button" class="no-button">No</button>
+                <input type="hidden" name="carInsurance" value="">
+            </div>
+
+            <!-- Question 3 -->
+            <div class="question">Do you have Reliable transportation?</div>
+            <div class="yes-no-buttons" data-question="reliableTransportation">
+                <button type="button" class="yes-button">Yes</button>
+                <button type="button" class="no-button">No</button>
+                <input type="hidden" name="reliableTransportation" value="">
+            </div>
+
+            <!-- Question 4 -->
+            <div class="question">Do you have a driver's license?</div>
+            <div class="yes-no-buttons" data-question="driversLicense">
+                <button type="button" class="yes-button">Yes</button>
+                <button type="button" class="no-button">No</button>
+                <input type="hidden" name="driversLicense" value="">
+            </div>
+
+
+            <button type="submit" id="submitFormButton">Submit Interview</button>
+        </form>
+    </div>
+
+    <script>
+        // JavaScript for handling Yes/No buttons
+        document.querySelectorAll('.yes-no-buttons button').forEach(button => {
+            button.addEventListener('click', function() {
+                const parent = this.parentNode;
+                const input = parent.querySelector('input[type="hidden"]');
+                input.value = this.textContent;
+
+                // Visual feedback for selection
+                parent.querySelectorAll('button').forEach(btn => btn.style.opacity = '0.5');
+                this.style.opacity = '1';
+            });
+        });
+
+       document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('interviewForm');
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Extract the recordId from the URL
+        const urlParts = window.location.pathname.split('/');
+        const recordId = urlParts[urlParts.length - 1]; // Assuming the URL structure is /interview/recordId
+
+        // Gather form data
+        const formData = new FormData(form);
+        const formObject = {};
+        formData.forEach((value, key) => {
+            formObject[key] = value;
+        });
+
+        // Handle Yes/No questions
+        document.querySelectorAll('.yes-no-buttons input[type="hidden"]').forEach(input => {
+            formObject[input.name] = input.value; // Add Yes/No answers to the formObject
+        });
+
+        try {
+            // Send the data to the server using Fetch API
+            const response = await fetch(`/submit-interview/${recordId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formObject)
+            });
+
+            if (response.ok) {
+                window.location.href = `/outcome/${recordId}`; // Display a popup message
+                // Optionally, redirect the user or clear the form
+            } else {
+                alert('There was an error submitting the form. Please try again.'); // Error message
+            }
+          } catch (error) {
+            // Handle errors in sending the request
+            console.error('Error submitting form:', error);
+            alert('There was an error submitting the form. Please try again.');
+        }
+    });
+});
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Office Directory</title>
+<style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #4a4a4a;
+        }
+        .container {
+            max-width: 950px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #company-logo {
+            display: block;
+            max-width: 40%;
+            height: auto;
+            margin: 10px auto;
+        }
+        .new-hire-button {
+            display: block;
+            max-width: 950px;
+            margin: 20px auto;
+            padding: 8px 15px;
+            background-color: #4ac1e0;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        h1 {
+            text-align: center;
+        }
+        .office-list {
+            list-style: none;
+            padding: 0;
+        }
+        .office-name {
+            flex-grow: 1;
+            margin: 0;
+            text-align: left;
+            font-size: 18px;
+            font-weight: bold;
+        }
+  
+        .office-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+        .office-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .button {
+            padding: 8px 15px;
+            background-color: #4ac1e0;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            text-align: center;
+            min-width: 120px;
+            max-width: 200px;
+            flex-grow: 1;
+            flex-shrink: 0;
+            flex-basis: calc(50% - 10px);
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 974px) {
+            .office-item {
+                justify-content: center;
+            }
+            .office-name {
+                width: 100%;
+                margin-bottom: 0px;
+                text-align: center;
+                font-weight: bold;
+                font-size: 25px;
+            }
+            .button {
+                flex-basis: auto;
+                width: auto;
+                margin: 0px;
+                padding: 8px 10px;
+            }
+            .new-hire-button {
+                width: calc(100% - 40px); /* Account for body padding */
+                margin: 20px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+   <img src="https://cdn.glitch.global/d1a498f5-46b5-4cb0-8d70-9011d7b99de2/PLP%20Logo.png?v=1705445568021" alt="Company Logo" id="company-logo">
+   
+   <a href="/new-hire-list" class="new-hire-button">New Hire List</a>
+  
+    <div class="container">
+        <h1>Recruiting & Onboarding</h1>
+      
+        <ul class="office-list">
+            {{#each offices}}
+            <li class="office-item">
+                <img src="{{{this.officeIcon}}}" alt="{{this.Name}} Icon" class="office-icon">
+                <span class="office-name">{{this.Name}}</span>
+                <a href="/office/{{this.id}}" class="button">Candidate List</a>
+                <a href="/status/{{this.id}}" class="button">Onboarding Status</a>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+</body>
+</html>
