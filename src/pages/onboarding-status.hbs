@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Onboarding Status</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #4a4a4a;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .candidate-card {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .name {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 5px;
+            width: 100%;
+            text-align: center;
+        }
+        .start-date {
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 3px;
+            width: 100%;
+            text-align: center;
+        }
+        .status-row {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        .status-indicator {
+            height: 15px;
+            width: 15px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .true {
+            background-color: #4CAF50;
+        }
+        .false {
+            background-color: #F44336;
+        }
+        .yellow {
+            background-color: #FFDD57; /* Adjust the color code if needed */
+        }
+        
+        .background-check-under-review {
+            background-color: #ffcccc; /* Light red background */
+        }
+
+        p {
+            margin: 0;
+            flex-grow: 1;
+        }
+        .light-green-background {
+            background-color: #ccffcc; /* Light green */
+        }
+        .days-until-start {
+            font-weight: bold;
+            margin-top: 0px;
+            margin-bottom: 10px;
+            text-align: center;
+            width: 100%;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 style="text-align: center;">Candidate Onboarding Status</h1>
+    {{#each candidates}}
+    <!-- Apply 'light-green-background' class if all conditions are true, otherwise check for 'background-check-under-review' -->
+    <div class="candidate-card {{#if this.allConditionsTrue}}light-green-background{{else if this.backgroundCheckUnderReview}}background-check-under-review{{/if}}">
+        <div class="name">{{this.fullName}}</div>
+        <!-- Show the message only if 'backgroundCheckUnderReview' is true and 'allConditionsTrue' is not true -->
+        {{#if this.backgroundCheckUnderReview}}
+            {{#unless this.allConditionsTrue}}
+            <div class="name" style="font-weight: normal;">Background Check Under Review</div>
+            {{/unless}}
+        {{/if}}
+        <div class="start-date">Start Date: {{this.startDate}}</div>
+        <div class="days-until-start">{{this.daysUntilStart}} Days Till Start</div>
+        <div class="status-row"><span class="status-indicator {{#if this.onboardingInitiated}}true{{else}}false{{/if}}"></span><p>Onboarding Initiated</p></div>
+        <div class="status-row"><span class="status-indicator {{#if this.backgroundCheckAuthorized}}true{{else}}false{{/if}}"></span><p>Background Check Authorized</p></div>
+        <div class="status-row"><span class="status-indicator {{#if this.backgroundCheckComplete}}true{{else}}false{{/if}}"></span><p>Background Check Complete</p></div>
+        <div class="status-row"><span class="status-indicator {{#if this.candidatePacketComplete}}true{{else}}false{{/if}}"></span><p>Candidate Packet Complete</p></div>
+        <div class="status-row"><span class="status-indicator {{#if this.onboardingPacketComplete}}true{{else}}false{{/if}}"></span><p>Onboarding Team Packet Complete</p></div>
+        <div class="status-row"><span class="status-indicator {{#if this.hrPacketComplete}}true{{else}}false{{/if}}"></span><p>HR Approved</p></div>
+    </div>
+    {{/each}}
+</div>
+
+
+
+
+
+</body>
+</html>

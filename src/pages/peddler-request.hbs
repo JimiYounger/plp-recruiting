@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peddler Request Form</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Inline CSS for any additional styling -->
+    <style>
+        /* Reuse styles from request-to-hire.hbs */
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #4a4a4a;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 95%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .select2-container .select2-selection--single {
+            height: 39px;
+            padding: 6px 10px;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: .375rem .75rem;
+            border-radius: .25rem;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .btn-primary:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+
+        #loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        #loader {
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #3498db;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .blur {
+            filter: blur(5px);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Peddler Request Form</h2>
+    <form id="peddlerRequestForm">
+      
+        <div class="form-group">
+            <label for="permitFor">Who Is the Permit For?</label>
+            <select id="permitFor" name="permitFor" class="form-control select2" required></select>
+        </div>
+
+        <div class="form-group">
+            <label for="immediateSupervisor">Immediate Supervisor</label>
+            <select id="immediateSupervisor" name="immediateSupervisor" class="form-control select2" required></select>
+        </div>
+
+
+        <div class="form-group">
+            <label for="branch">Branch</label>
+            <select id="branch" name="branch" class="form-control select2" required></select>
+        </div>
+
+        <div class="form-group">
+            <label for="notes">Notes</label>
+            <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Enter any additional notes here..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit Request</button>
+    </form>
+    <br>
+    <br>
+
+    <div id="loader-container">
+        <div id="loader"></div>
+    </div>
+</div>
+
+<!-- jQuery and Bootstrap Bundle (includes Popper) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<!-- Select2 JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<script>
+    const teamMembersInfo = new Map();
+    const branchesInfo = new Map();
+
+    document.addEventListener('DOMContentLoaded', function() {
+        $(document).ready(function() {
+            // Initialize Select2 elements
+            $('.select2').select2();
+
+            // Fetch active team members for the dropdowns
+            fetch('/active-team-members')
+                .then(response => response.json())
+                .then(data => {
+                    const immediateSupervisorSelect = document.getElementById('immediateSupervisor');
+                    const permitForSelect = document.getElementById('permitFor');
+                    immediateSupervisorSelect.innerHTML = '';
+                    permitForSelect.innerHTML = '';
+
+                    // Optionally, add a default "Select" option
+                    immediateSupervisorSelect.add(new Option("Select a Team Member", "", true, true));
+                    permitForSelect.add(new Option("Select a Team Member", "", true, true));
+
+                    // Populate the select element with active team members
+                    data.teamMembers.forEach(member => {
+                        const option = new Option(member.name, member.id); 
+                        immediateSupervisorSelect.add(option);
+                        permitForSelect.add(option.cloneNode(true));
+                    });
+
+                    // Re-initialize Select2 for the select elements to refresh the UI
+                    $('#immediateSupervisor').select2();
+                    $('#permitFor').select2();
+                })
+                .catch(error => {
+                    console.error('Error fetching active team members:', error);
+                });
+
+            fetch('/branches')
+                .then(response => response.json())
+                .then(data => {
+                    const branchSelect = document.getElementById('branch');
+                    branchSelect.innerHTML = '';
+
+                    // Optionally, add a default "Select" option
+                    branchSelect.add(new Option("Select a Branch", "", true, true));
+
+                    // Populate the select element with branch names
+                    data.branches.forEach(branch => {
+                        const option = new Option(branch.name, branch.id);
+                        branchSelect.add(option);
+                    });
+
+                    // Re-initialize Select2 for the branch select element to refresh the UI
+                    $('#branch').select2();
+                })
+                .catch(error => {
+                    console.error('Error fetching branches:', error);
+                });
+        });
+    });
+
+document.getElementById('peddlerRequestForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Display the loader
+    document.getElementById('loader-container').style.display = 'flex';
+    document.querySelector('.container').classList.add('blur');
+
+    const formData = new FormData(event.target);
+    const formObject = {};
+
+    formData.forEach(function(value, key) {
+        formObject[key] = value;
+    });
+
+    // Send the data to the server-side endpoint
+    fetch('/request-peddlers', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formObject)
+    })
+    .then(response => {
+        if (response.headers.get('Content-Type').includes('application/json')) {
+            return response.json();
+        } else if (response.redirected) {
+            // Handle the redirection to the success page
+            window.location.href = response.url;
+        } else {
+            throw new Error('Unexpected response format');
+        }
+    })
+    .then(data => {
+        if (data.success) {
+            // Success handling if JSON is returned
+            alert('Request submitted successfully.');
+        } else {
+            // Handle JSON error response
+            throw new Error(data.error);
+        }
+    })
+    .catch((error) => {
+        document.getElementById('loader-container').style.display = 'none';
+        document.querySelector('.container').classList.remove('blur');
+        console.error('Error:', error);
+        alert('Failed to submit request. Please try again.');
+    });
+});
+
+
+
+</script>
+</body>
+</html>

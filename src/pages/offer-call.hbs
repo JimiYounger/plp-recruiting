@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offer Call for {{fullName}}</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #4a4a4a;
+            padding: 20px;
+        }
+
+                .button {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4ac1e0;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none; /* Removes underline from links */
+        }
+
+
+        .no-button {
+            background-color: #ff4136;
+        }
+
+            /* Modal Background */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+            
+        }
+
+                /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            border-radius: 5px;
+            width: 80%; /* Could be more or less, depending on screen size */
+            max-width: 600px; /* Maximum width */
+            text-align: center; /* Centered text */
+        }
+
+        /* Additional Styles */
+        .modal-content form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          
+        }
+
+        .modal-content form input[type="email"],
+        .modal-content form input[type="datetime-local"],
+        .modal-content form select,
+        .modal-content form textarea {
+            width: calc(100% - 40px); /* Full width minus padding */
+            margin-bottom: 10px; /* Margin to separate the form elements */
+        }
+
+        .modal-content form button {
+            width: calc(100% - 40px); /* Full width minus padding */
+            margin-top: 10px; /* Extra space above the button */
+        }
+
+        /* Textarea specific styles */
+        .modal-content form textarea {
+            height: 100px; /* Fixed height for the textarea */
+            resize: vertical; /* Allow vertical resizing */
+            font-size: 16px;
+        }
+
+
+        /* The Close Button */
+        .close {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Form elements styling */
+        input[type="email"], input[type="datetime-local"], select {
+            width: calc(100% - 20px); /* Full width minus padding */
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 20px; /* Spacing below the elements */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* Label styling */
+        label {
+            display: block;
+            margin-top: 10px;
+            text-align: left; /* Align labels to left */
+        }
+
+        /* Styling for buttons within the modal */
+        #scheduleButton, .button {
+            background-color: #4ac1e0; /* Blue background */
+            color: white; /* White text */
+            padding: 10px 20px; /* Padding around text */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            display: inline-block; /* Allow buttons to sit side by side */
+            font-size: 16px; /* Text size */
+            margin: 10px 5px; /* Spacing around buttons */
+        }
+
+        #scheduleButton:hover, .button:hover {
+            background-color: #3296b1; /* Darker shade of blue for hover */
+        }
+
+
+        .hidden {
+            display: none;
+        }
+            textarea#reasonInput {
+          width: calc(100% - 40px); /* Adjust width as needed, accounting for padding */
+          height: 150px; /* Adjust height to make the box bigger */
+          padding: 10px; /* Add some padding inside the textarea */
+          margin-bottom: 20px; /* Add space between the textarea and the button */
+          border: 1px solid #ddd; /* Add a border to the textarea */
+          border-radius: 5px; /* Optionally round the corners of the textarea */
+          resize: vertical; /* Allow only vertical resizing */
+      }
+
+      #submitReasonButton {
+          width: auto; /* Allow the button to size according to its content */
+          margin: 0 auto; /* Center the button if desired */
+          display: block; /* Make the button a block element to occupy its own line */
+          /* Other styles remain the same */
+      }
+            #applicationModal input[type="text"] {
+          width: 90%;
+          padding: 10px;
+          margin: 20px 0;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+          text-align: center;
+      }
+    </style>
+</head>
+<body>
+
+<h2>Is {{fullName}} going to move forward?</h2>
+
+<button id="yesButton" class="button">Yes</button>
+<button id="noButton" class="button no-button">No</button>
+
+<div id="actionButtons" class="hidden">
+   
+    <button id="sendApplicationButton" class="button">Send Application</button>
+   
+    <button id="scheduleOnboardingButton" class="button">Schedule Onboarding Meeting</button>
+   
+    <a id="requestHireButton" class="button" href="/requesthire/{{recordId}}" class="hire-button">Request To Hire</a>
+
+</div>
+
+<!-- No Thanks Modal -->
+<div id="noThanksModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Why is {{firstName}} not moving forward?</h2>
+        <form id="reasonForm" action="/disqualify-candidate" method="POST">
+            <textarea id="reasonInput" name="reason" placeholder="Enter your reason here"></textarea>
+            <input type="hidden" id="recordId" name="recordId" value="{{recordId}}">
+            <button type="submit" id="submitReasonButton" class="button">Submit</button>
+        </form>
+
+    </div>
+</div>
+
+  <!-- Application Modal -->
+<div id="applicationModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Application Link</h3>
+        <input type="text" id="applicationLink" value="{{paylocityApplication}}" readonly>
+        <button id="copyButton" class="button">Copy to Clipboard</button>
+        <button id="textButton" class="button">Text</button>
+    </div>
+</div>
+
+
+<!-- Scheduling Modal (from the first page) -->
+<div id="schedulingModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Schedule Onboarding Meeting</h3>
+        <form id="onboardingScheduleForm">
+            <label for="hiringManagerEmail">Hiring Manager Email:</label>
+            <input type="email" id="hiringManagerEmail" name="hiringManagerEmail" value="{{managerEmail}}" required>
+
+            <label for="candidateEmail">Candidate Email:</label>
+            <input type="email" id="candidateEmail" name="candidateEmail" value="{{email}}" required>
+
+            <label for="location">Location:</label>
+                     <select id="locationSelect" name="location">
+              {{#each location}}
+              <option value="{{this}}">{{this}}</option>
+              {{/each}}
+          </select>
+
+            <label for="dateTime">Date and Time:</label>
+            <input type="datetime-local" id="dateTime" name="dateTime" required>
+
+          <label for="meetingNotes">Notes:</label>
+            <textarea id="meetingNotes" name="meetingNotes" placeholder="Add any notes or special instructions here..."></textarea>
+
+
+            <input type="hidden" id="hiddenCandidateName" name="hiddenCandidateName" value="{{fullName}}">
+            <input type="hidden" id="hiddenLeaderName" name="hiddenLeaderName">
+            <input type="hidden" id="hiddenLeaderPhone" name="hiddenLeaderPhone">
+            <input type="hidden" id="hiddenCandidatePhone" name="hiddenCandidatePhone" value="{{phone}}">
+            <input type="hidden" id="hiddenRecordId" name="hiddenRecordId" value="{{recordId}}">
+            <input type="hidden" id="hiddenTimeZone" name="hiddenTimeZone" value="{{timeZone}}">
+
+            <button type="submit" id="scheduleOnboardingButtonModal" class="button">Schedule</button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    document.getElementById("yesButton").addEventListener("click", function() {
+        document.getElementById("actionButtons").classList.remove("hidden");
+    });
+
+    document.getElementById("noButton").addEventListener("click", function() {
+        document.getElementById("noThanksModal").style.display = "block";
+    });
+
+    
+
+    var modals = document.querySelectorAll(".modal");
+    modals.forEach(function(modal) {
+        modal.querySelector(".close").addEventListener("click", function() {
+            modal.style.display = "none";
+        });
+    });
+
+    window.addEventListener("click", function(event) {
+        modals.forEach(function(modal) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        });
+    });
+
+    // Set the recordId and open the No Thanks modal when a No Thanks button is clicked
+    document.querySelectorAll(".no-thanks-button").forEach(button => {
+        button.addEventListener("click", function() {
+            const recordId = this.getAttribute("data-record-id"); // Assuming each "No Thanks" button has a data-record-id attribute
+            document.getElementById("recordId").value = recordId; // Set the hidden input field's value
+            document.getElementById("noThanksModal").style.display = "block";
+        });
+    });
+
+          // Handle the No Thanks form submission
+      document.getElementById("reasonForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent the form from submitting in the traditional way
+
+    // Construct a JSON object from the form fields
+    const data = {
+        reason: document.getElementById("reasonInput").value,
+        recordId: document.getElementById("recordId").value
+    };
+
+    // Use the fetch API to send the data as JSON
+    fetch('/disqualify-candidate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json' // Indicate that we're sending JSON data
+        },
+        body: JSON.stringify(data) // Convert the JavaScript object to a JSON string
+    })
+    .then(response => response.json()) // Parse the JSON response
+    .then(data => {
+        if(data.success) {
+            alert("Candidate status updated successfully.");
+            document.getElementById("noThanksModal").style.display = "none";
+            // Optionally, reset the form or update the UI
+        } else {
+            alert("Error: " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("Error submitting the form.");
+    });
+});
+
+document.getElementById("sendApplicationButton").addEventListener("click", function() {
+    document.getElementById("applicationModal").style.display = "block";
+});
+
+document.getElementById("copyButton").addEventListener("click", function() {
+    const applicationLink = document.getElementById("applicationLink");
+    applicationLink.select();
+    document.execCommand("copy");
+    alert("Application Link Has Been Copied To Your Clipboard ");
+});
+
+document.getElementById("textButton").addEventListener("click", function() {
+    const phone = "{{phone}}"; // Ensure this is dynamically populated with the correct data
+    const firstName = "{{firstName}}"; // Ensure this is dynamically populated with the correct data
+    const applicationLink = document.getElementById("applicationLink").value;
+    const message = `Hey ${firstName}! We are excited about you joining the team! Please take a few minutes to fill out this application: ${applicationLink}`;
+
+    // Encode the message part of the URI
+    const encodedMessage = encodeURIComponent(message);
+
+    // Construct the SMS URI
+    const smsUri = `sms:${phone}?&body=${encodedMessage}`;
+
+    // Open the SMS app with the constructed URI
+    window.open(smsUri);
+});
+
+// Close modal on clicking the close button
+document.querySelectorAll(".close").forEach(closeButton => {
+    closeButton.addEventListener("click", function() {
+        this.parentElement.parentElement.style.display = "none";
+    });
+});
+
+// Close the modal if the user clicks outside of it
+window.addEventListener("click", function(event) {
+    if (event.target.classList.contains('modal')) {
+        event.target.style.display = "none";
+    }
+});
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    document.getElementById("scheduleOnboardingButton").addEventListener("click", function() {
+        // Get current date and time
+        var currentDate = new Date();
+        // Add 24 hours
+        currentDate.setHours(currentDate.getHours() + 24);
+        
+        // Get the timezone offset in minutes and convert it to milliseconds
+        var timezoneOffset = currentDate.getTimezoneOffset() * 60000;
+        // Convert to local time by subtracting the timezone offset
+        var localDate = new Date(currentDate.getTime() - timezoneOffset);
+        // Convert to a format that can be used in the datetime-local input
+        var dateTimeLocal = localDate.toISOString().slice(0,16); // "YYYY-MM-DDTHH:MM" format
+        
+        // Set the value of the dateTime input
+        document.getElementById("dateTime").value = dateTimeLocal;
+        
+        // Display the modal
+        document.getElementById("schedulingModal").style.display = "block";
+    });
+
+document.getElementById("scheduleOnboardingButton").addEventListener("click", function() {
+        document.getElementById("schedulingModal").style.display = "block";
+    });
+  
+document.getElementById("onboardingScheduleForm").addEventListener("submit", async function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Disable the button to prevent multiple submissions
+    const submitButton = document.getElementById("scheduleOnboardingButtonModal");
+    submitButton.disabled = true;
+
+    // Create an object with the form data
+    const formData = new FormData(this);
+    const formProps = Object.fromEntries(formData);
+
+    // If you have date and time inputs, ensure they're included in the JSON
+    formProps.dateTime = document.getElementById("dateTime").value;
+
+    try {
+        const response = await fetch('/schedule-onboarding-day', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json' // Set the content type to JSON
+            },
+            body: JSON.stringify(formProps) // Convert the JavaScript object to a JSON string
+        });
+
+        const result = await response.json();
+        submitButton.disabled = false; // Re-enable the button
+
+        if (result.success) {
+            alert("Onboarding day scheduled successfully.");
+            document.getElementById("schedulingModal").style.display = "none";
+        } else {
+            alert("Error: " + result.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        submitButton.disabled = false; // Re-enable the button
+        alert("Error submitting the form.");
+    }
+});
+
+  
+});
+</script>
+
+
+</body>
+</html>

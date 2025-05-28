@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Qualified Candidates</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" sizes="192x192" href="https://cdn.glitch.global/d1a498f5-46b5-4cb0-8d70-9011d7b99de2/PLP%20Logo.png?v=1705445568021">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.glitch.global/d1a498f5-46b5-4cb0-8d70-9011d7b99de2/PLP%20Logo.png?v=1705445568021">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://cdn.glitch.global/d1a498f5-46b5-4cb0-8d70-9011d7b99de2/PLP%20Logo.png?v=1705445568021">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://cdn.glitch.global/d1a498f5-46b5-4cb0-8d70-9011d7b99de2/PLP%20Logo.png?v=1705445568021">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    
+    <!-- Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" />
+    
+    <!-- Select2 JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
+    <meta name="apple-mobile-web-app-title" content="Candidate Flow">
+<style>
+:root {
+  --company-blue: #4ac1e0;
+  --dark-blue: #2a4b8d;
+  --light-gray: #f4f4f4;
+  --white: #ffffff;
+  --black: #000000;
+  --accent-color: #ff6b6b;
+  --success-color: #4CAF50;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--light-gray);
+  color: var(--dark-blue);
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  width: 95%;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: var(--white);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2.5em;
+  margin-bottom: 30px;
+  color: var(--dark-blue);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+#company-logo {
+  display: block;
+  max-width: 200px;
+  height: auto;
+  margin: 20px auto;
+  transition: transform 0.3s ease;
+}
+
+#company-logo:hover {
+  transform: scale(1.05);
+}
+
+.filter-container {
+  background-color: var(--white);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+}
+
+.filter-container h3 {
+  margin-bottom: 15px;
+  color: var(--dark-blue);
+}
+
+#officeFilterCheckboxes {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid var(--light-gray);
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.checkbox-item {
+  margin-bottom: 10px;
+}
+
+.checkbox-item input[type="checkbox"] {
+  display: none;
+}
+
+.checkbox-item label {
+  display: inline-block;
+  padding-left: 30px;
+  position: relative;
+  cursor: pointer;
+}
+
+.checkbox-item label:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--company-blue);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.checkbox-item input[type="checkbox"]:checked + label:before {
+  background-color: var(--company-blue);
+}
+
+.checkbox-item label:after {
+  content: '\2714';
+  position: absolute;
+  top: -1px;
+  left: 5px;
+  font-size: 16px;
+  color: var(--white);
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.checkbox-item input[type="checkbox"]:checked + label:after {
+  opacity: 1;
+}
+
+#statusFilter {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--light-gray);
+  border-radius: 8px;
+  font-size: 16px;
+  color: var(--dark-blue);
+  background-color: var(--white);
+  transition: all 0.3s ease;
+}
+
+#statusFilter:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--company-blue);
+}
+
+.apply-filter-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: var(--company-blue);
+  color: var(--white);
+  border: none;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.apply-filter-btn:hover {
+  background-color: var(--dark-blue);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.candidate-list {
+  list-style: none;
+}
+
+.candidate-item {
+  background-color: var(--white);
+  margin-bottom: 20px;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.candidate-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.name-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.name {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--dark-blue);
+  margin-right: 15px;
+}
+
+.phone-icon, .sms-icon {
+  width: 24px;
+  height: 24px;
+  margin: 0 5px;
+  transition: all 0.3s ease;
+}
+
+.phone-icon:hover, .sms-icon:hover {
+  transform: scale(1.2);
+}
+
+.candidate-info {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.candidate-info p {
+  margin-bottom: 8px;
+}
+
+.notes-section {
+  background-color: var(--light-gray);
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.notes-section h4 {
+  margin-bottom: 10px;
+  color: var(--dark-blue);
+}
+
+.notes-section pre {
+  font-family: 'Roboto Mono', monospace;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.button-group button,
+.button-group a {
+  flex: 1;
+  min-width: 150px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.schedule-interview-button, .hire-button {
+  background-color: var(--company-blue);
+  color: var(--white);
+}
+
+.no-thanks-button {
+  background-color: var(--accent-color);
+  color: var(--white);
+}
+
+.schedule-onboarding-button {
+  background-color: var(--success-color);
+  color: var(--white);
+}
+
+.send-video-interview-button, .notes-button {
+  background-color: var(--dark-blue);
+  color: var(--white);
+}
+
+.button-group button:hover,
+.button-group a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.watch-video-button {
+  background-color: var(--accent-color);
+  color: var(--white);
+  margin-top: 15px;
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background-color: var(--white);
+  margin: 10% auto;
+  padding: 30px;
+  border-radius: 15px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--dark-blue);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.close:hover {
+  color: var(--accent-color);
+}
+
+.modal h2 {
+  margin-bottom: 20px;
+  color: var(--dark-blue);
+}
+
+.modal input[type="text"],
+.modal input[type="email"],
+.modal textarea,
+.modal select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid var(--light-gray);
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.modal button {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--company-blue);
+  color: var(--white);
+  border: none;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.modal button:hover {
+  background-color: var(--dark-blue);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .button-group button,
+  .button-group a {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .modal-content {
+    width: 95%;
+    margin: 5% auto;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.candidate-item, .modal-content {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--light-gray);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--company-blue);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-blue);
+}
+    </style>
+</head>
+<body>
+    <img src="https://cdn.glitch.global/d1a498f5-46b5-4cb0-8d70-9011d7b99de2/PLP%20Logo.png?v=1705445568021" alt="Company Logo" id="company-logo">
+
+
+    <div class="container">
+        <h1>Candidate List</h1>
+<div class="filter-container">
+  <h3>Filter by Office:</h3>
+  <div id="officeFilterCheckboxes">
+    {{#each uniqueOffices}}
+      <div class="checkbox-item">
+        <input type="checkbox" id="office-{{this}}" name="office" value="{{this}}">
+        <label for="office-{{this}}">{{this}}</label>
+      </div>
+    {{/each}}
+  </div>
+  <button id="applyOfficeFilter" class="apply-filter-btn">Apply Filter</button>
+</div>
+        <label for="statusFilter">Filter by Status:</label>
+        <select id="statusFilter">
+            <option value="all">All</option>
+            {{#each uniqueStatuses}}
+            <option value="{{this}}">{{this}}</option>
+            {{/each}}
+        </select>
+        <div class="separator"></div>
+        <ul class="candidate-list">
+            {{#each candidates}}
+            <li class="candidate-item" data-office="{{this.officeName}}" data-status="{{this.status}}">
+                <br>
+                <div class="name-container">
+                    <span class="name">{{this.firstName}} {{this.lastName}}</span>
+                    <a href="#" class="phone-icon" data-phone="{{this.phone}}">
+                        <img src="https://cdn.glitch.global/d1a498f5-46b5-4cb0-8d70-9011d7b99de2/Icons-02.svg?v=1705616374477" alt="Phone Icon">
+                    </a>
+                    <a href="#" class="sms-icon" data-phone="{{this.phone}}" data-name="{{this.firstName}}">
+                        <img src="https://cdn.glitch.global/d1a498f5-46b5-4cb0-8d70-9011d7b99de2/Icons-04.svg?v=1705616374710" alt="SMS Icon">
+                    </a>
+                </div>
+                <div class="candidate-info">
+                    <p>Office: {{this.officeName}}</p>
+                    {{#if dateApplied}}  
+                    <p>Date Applied: {{this.dateApplied}}</p>
+                    {{/if}}  
+                    <p>Status: {{this.status}}</p>
+                    {{#if notes}}
+                    <div class="notes-section">
+                        <h4>Notes:</h4>
+                        <pre>{{notes}}</pre>
+                    </div>
+                    {{/if}}
+                    {{#if this.questionnaireKey}}
+                    <p class="evaluation-text">Candidate Evaluation: <span class="bold">{{this.questionnaireKey}}</span></p>
+                    {{/if}}
+                </div>
+                <br>
+                <div class="button-group">
+                    <button class="schedule-interview-button" 
+                            data-leader-email="{{this.leaderEmail}}" 
+                            data-candidate-email="{{this.email}}"
+                            data-leader-name="{{this.leaderName}}"
+                            data-candidate-name="{{this.firstName}} {{this.lastName}}"
+                            data-candidate-phone="{{this.phone}}"
+                            data-record-id="{{this.recordId}}" 
+                            data-leader-phone="{{this.leaderPhone}}">
+                        Schedule Interview
+                    </button>
+                    <a href="/requesthire/{{this.recordId}}" class="hire-button">Request To Hire</a>
+                    <button class="no-thanks-button"
+                            data-record-id="{{this.recordId}}"
+                            data-firstname="{{this.firstName}}"
+                            data-lastname="{{this.lastName}}">No Thanks</button>
+                    <button class="schedule-onboarding-button" 
+                            data-first-name="{{this.firstName}}" 
+                            data-last-name="{{this.lastName}}" 
+                            data-email="{{this.email}}" 
+                            data-phone="{{this.phone}}" 
+                            data-office-name="{{this.officeName}}">
+                        Schedule Onboarding Meeting
+                    </button>
+                    <button class="send-video-interview-button" data-record-id="{{this.recordId}}">Video Interview Link</button>
+                    <button class="notes-button" data-record-id="{{this.recordId}}">Add Note</button>
+                </div>
+                {{#if this.virtualInterview}}
+                <div class="button-group">
+                    <a href="{{this.virtualInterview}}" class="watch-video-button">Watch Video Interview</a>
+                </div>
+                {{/if}}
+            </li>
+            {{/each}}
+        </ul>
+        <div class="separator"></div>
+        <br>
+        <div class="button-group">
+            <a id="hireNewCandidateButton" class="candidate-list-button" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">Add New Candidate</a>
+        </div>
+    </div>
+  
+          <!-- Notes Modal -->
+          <div id="notesModal" class="modal">
+              <div class="modal-content">
+                  <span class="close" id="closeNotesModal">&times;</span>
+                  <h2>Add Notes</h2>
+                  <form id="notesForm">
+                      <input type="text" id="notesFirstName" placeholder="Your First Name" required>
+                      <textarea id="notesContent" placeholder="Enter your notes here" required></textarea>
+                      <input type="hidden" id="notesRecordId" name="recordId">
+                      <button type="button" id="submitNotesButton">Submit</button>
+                  </form>
+              </div>
+          </div>
+    <!-- No Thanks Modal -->
+    <div id="noThanksModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Why are you passing on this candidate?</h2>
+            <form id="reasonForm">
+                <textarea id="reasonInput" placeholder="Enter your reason here"></textarea>
+                <input type="hidden" id="recordIdInput" name="recordId">
+                <button type="button" id="submitReasonButton">Submit</button>
+            </form>
+        </div>
+    </div>
+    <!-- Schedule Interview Modal -->
+    <div id="scheduleInterviewModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal2">&times;</span>
+            <h2>Schedule Interview</h2>
+            <form id="scheduleInterviewForm">
+                <label for="hiringManagerEmail">Hiring Manager Email:</label>
+                <input type="email" id="hiringManagerEmail" name="hiringManagerEmail" required>
+    
+                <label for="candidateEmail">Candidate Email:</label>
+                <input type="email" id="candidateEmail" name="candidateEmail" required>
+    
+                <label for="location">Location:</label>
+                <select id="locationSelect" name="location">
+                    <option value="{{officeAddress}}">{{officeAddress}}</option>
+                    <option value="See Notes">See Notes</option>
+                </select>
+    
+                <label for="dateTime">Date and Time:</label>
+                <input type="datetime-local" id="dateTime" name="dateTime" required>
+              
+                <label for="meetingNotes">Notes:</label>
+                <textarea id="meetingNotes" name="meetingNotes" placeholder="Add any notes or special instructions here..."></textarea>
+              
+                <input type="hidden" id="hiddenCandidateName" name="candidateName">
+                <input type="hidden" id="hiddenLeaderName" name="leaderName">
+                <input type="hidden" id="hiddenLeaderPhone" name="leaderPhone">
+                <input type="hidden" id="hiddenCandidatePhone" name="candidatePhone">
+                <input type="hidden" id="hiddenRecordId" name="recordId">
+                <input type="hidden" id="hiddenTimeZone" name="timeZone" value="{{timeZone}}">
+    
+                <button type="button" id="scheduleButton">
+                    <span id="scheduleButtonText">Schedule</span>
+                    <span id="loadingSpinner" style="display: none;"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Hire New Candidate Modal -->
+    <div id="hireCandidateModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeHireModal">&times;</span>
+            <h2>Add Candidate</h2>
+            <form id="hireCandidateForm">
+                <input type="text" id="firstName" name="firstName" placeholder="First Name" required>
+                <input type="text" id="lastName" name="lastName" placeholder="Last Name" required>
+                <input type="email" id="email" name="email" placeholder="Email" required>
+                <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Phone Number" required>
+                <input type="hidden" id="officeId" name="officeId" value="{{officeId}}">
+    
+                <div id="referralQuestion">
+                    <p>Is this person a referral?</p>
+                    <input type="radio" id="referralYes" name="referral" value="yes">
+                    <label for="referralYes">Yes</label>
+                    <input type="radio" id="referralNo" name="referral" value="no" checked>
+                    <label for="referralNo">No</label>
+                </div>
+                <div id="referredByField" style="display: none;">
+                    <label for="referredBy">Referred By:</label>
+                    <input type="text" id="referredBy" name="referredBy" placeholder="Referred By">
+                </div>
+                <br>
+                <button type="button" id="submitHireFormButton">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Video Interview Modal -->
+    <div id="videoInterviewModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeVideoInterviewModal">&times;</span>
+            <h2>Send Video Interview</h2>
+            <p>Video Interview Link: <a id="videoInterviewLink" href="#" target="_blank">Click Here</a></p>
+            <br>
+            <div class="button-group">
+                <button id="copyVideoInterviewLinkButton" class="button">Copy to Clipboard</button>
+                <button id="textVideoInterviewLinkButton" class="button">Text</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Link Modal -->
+    <div id="applicationLinkModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeApplicationLinkModal">&times;</span>
+            <h2>Application Link</h2>
+            <textarea id="applicationLinkTextarea" readonly>{{paylocityApplicationLink}}</textarea>
+            <button id="copyApplicationLinkButton" class="button">Copy to Clipboard</button>
+        </div>
+    </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const applyOfficeFilterButton = document.getElementById("applyOfficeFilter");
+    const statusFilter = document.getElementById("statusFilter");
+    const candidateItems = document.querySelectorAll(".candidate-item");
+
+    function filterCandidates() {
+        const selectedOffices = Array.from(document.querySelectorAll('input[name="office"]:checked'))
+            .map(checkbox => checkbox.value);
+        const selectedStatus = statusFilter.value;
+
+        candidateItems.forEach(item => {
+            const candidateOffice = item.getAttribute("data-office");
+            const candidateStatus = item.getAttribute("data-status");
+            
+            const officeMatch = selectedOffices.length === 0 || selectedOffices.includes(candidateOffice);
+            const statusMatch = selectedStatus === "all" || candidateStatus === selectedStatus;
+
+            if (officeMatch && statusMatch) {
+                item.style.display = "";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    }
+
+    // Event listeners for filters
+    applyOfficeFilterButton.addEventListener("click", filterCandidates);
+    statusFilter.addEventListener("change", filterCandidates);
+
+    // Initialize filtering
+    filterCandidates();
+
+    // Initialize Select2 for better UX on status filter
+    $(document).ready(function() {
+        $('#statusFilter').select2({
+            placeholder: "Select status",
+            allowClear: true
+        });
+    });
+
+    // Modal functionality
+    function setupModal(modalId, openButtonSelector, closeButtonSelector) {
+        const modal = document.getElementById(modalId);
+        const openButtons = document.querySelectorAll(openButtonSelector);
+        const closeButton = modal.querySelector(closeButtonSelector);
+
+        openButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                modal.style.display = "block";
+            });
+        });
+
+        closeButton.addEventListener("click", () => {
+            modal.style.display = "none";
+        });
+
+        window.addEventListener("click", (event) => {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+    }
+
+    // Setup modals
+    setupModal("scheduleInterviewModal", ".schedule-interview-button", ".close");
+    setupModal("noThanksModal", ".no-thanks-button", ".close");
+    setupModal("hireCandidateModal", "#hireNewCandidateButton", ".close");
+    setupModal("videoInterviewModal", ".send-video-interview-button", ".close");
+    setupModal("applicationLinkModal", "#applicationLinkButton", ".close");
+    setupModal("notesModal", ".notes-button", ".close");
+
+    // Schedule Interview functionality
+    document.querySelectorAll(".schedule-interview-button").forEach(function(button) {
+        button.addEventListener("click", function() {
+            var leaderEmail = this.getAttribute("data-leader-email");
+            var candidateEmail = this.getAttribute("data-candidate-email");
+            var leaderName = this.getAttribute("data-leader-name");
+            var candidateName = this.getAttribute("data-candidate-name");
+            var candidatePhone = this.getAttribute("data-candidate-phone");
+            var leaderPhone = this.getAttribute("data-leader-phone");
+            var recordId = this.getAttribute("data-record-id");
+            
+            document.getElementById("hiringManagerEmail").value = leaderEmail;
+            document.getElementById("candidateEmail").value = candidateEmail;
+            document.getElementById("hiddenCandidateName").value = candidateName;
+            document.getElementById("hiddenLeaderName").value = leaderName;
+            document.getElementById("hiddenCandidatePhone").value = candidatePhone;
+            document.getElementById("hiddenLeaderPhone").value = leaderPhone;
+            document.getElementById("hiddenRecordId").value = recordId;
+        });
+    });
+
+    // Hire New Candidate functionality
+    document.getElementById('submitHireFormButton').addEventListener('click', async function() {
+        const formData = {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            email: document.getElementById('email').value,
+            phoneNumber: document.getElementById('phoneNumber').value,
+            officeId: document.getElementById('officeId').value,
+            referredBy: document.getElementById('referredBy').value
+        };
+
+        const isReferral = document.getElementById('referralYes').checked;
+        if (!isReferral || formData.referredBy.trim() === '') {
+            delete formData.referredBy;
+        }
+
+        try {
+            const response = await fetch('/add-candidate-airtable', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                alert('Candidate successfully added.');
+                document.getElementById('hireCandidateModal').style.display = 'none';
+                window.location.reload();
+            } else {
+                alert('An error occurred. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        }
+    });
+
+    // No Thanks functionality
+    document.getElementById("submitReasonButton").addEventListener("click", async function() {
+        const reason = document.getElementById("reasonInput").value.trim();
+        const recordId = document.getElementById("recordIdInput").value;
+
+        if (!reason) {
+            alert("Please provide a reason for disqualification.");
+            return;
+        }
+
+        try {
+            const response = await fetch("/disqualify-candidate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ reason, recordId }),
+            });
+
+            if (response.ok) {
+                alert("Candidate status updated successfully.");
+                document.getElementById("noThanksModal").style.display = "none";
+                window.location.reload();
+            } else {
+                const responseData = await response.json();
+                throw new Error(responseData.message || "An error occurred");
+            }
+        } catch (error) {
+            alert(`Error: ${error.message}`);
+        }
+    });
+
+    // Phone and SMS functionality
+    document.querySelectorAll('.phone-icon').forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            let phone = this.getAttribute("data-phone");
+            if(phone) {
+                window.top.location.href = "tel:+1" + phone;
+            }
+        });
+    });
+
+    document.querySelectorAll('.sms-icon').forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            let phone = this.getAttribute("data-phone");
+            let name = this.getAttribute("data-name");
+            if(phone && name) {
+                window.top.location.href = `sms:+1${phone}?&body=Hey%20${name}`;
+            }
+        });
+    });
+
+    // Video Interview functionality
+    document.querySelectorAll(".send-video-interview-button").forEach(function(button) {
+        button.addEventListener("click", async function() {
+            const recordId = this.getAttribute("data-record-id");
+
+            try {
+                const response = await fetch(`/generate-video-interview-link/${recordId}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    const videoInterviewLink = data.shortLink;
+                    const fullName = data.name;
+                    const firstName = fullName.split(' ')[0];
+                    const phone = data.phone;
+
+                    document.getElementById("videoInterviewLink").href = videoInterviewLink;
+                    document.getElementById("videoInterviewLink").textContent = videoInterviewLink;
+
+                    const textButton = document.getElementById("textVideoInterviewLinkButton");
+                    textButton.setAttribute("data-phone", phone);
+                    textButton.setAttribute("data-name", firstName);
+                    textButton.setAttribute("data-link", videoInterviewLink);
+                } else {
+                    alert(`Error: ${data.message}`);
+                }
+            } catch (error) {
+                console.error('Error fetching video interview link:', error);
+                alert('An error occurred. Please try again.');
+            }
+        });
+    });
+
+    document.getElementById("copyVideoInterviewLinkButton").addEventListener("click", function() {
+        const videoInterviewLink = document.getElementById("videoInterviewLink").href;
+        navigator.clipboard.writeText(videoInterviewLink).then(function() {
+            alert("Video Interview Link has been copied to your clipboard.");
+        }, function(err) {
+            console.error('Could not copy text: ', err);
+        });
+    });
+
+    document.getElementById("textVideoInterviewLinkButton").addEventListener("click", function() {
+        const phone = this.getAttribute("data-phone");
+        const name = this.getAttribute("data-name");
+        const link = this.getAttribute("data-link");
+        const message = `Hey ${name}! We are excited about your interest in joining the team! Please take a few minutes to complete this video interview: ${link}`;
+
+        const encodedMessage = encodeURIComponent(message);
+        const smsUri = `sms:${phone}?&body=${encodedMessage}`;
+        window.open(smsUri);
+    });
+
+    // Schedule Interview submission
+    document.getElementById("scheduleButton").addEventListener("click", async function() {
+        if (!validateForm()) {
+            alert("Please fill in all required fields.");
+            return;
+        }
+
+        const submitData = {
+            leaderEmail: document.getElementById("hiringManagerEmail").value,
+            email: document.getElementById("candidateEmail").value,
+            location: document.getElementById("locationSelect").value,
+            dateTime: document.getElementById("dateTime").value,
+            timeZone: document.getElementById("hiddenTimeZone").value,
+            candidateName: document.getElementById("hiddenCandidateName").value,
+            leaderName: document.getElementById("hiddenLeaderName").value,
+            candidatePhone: document.getElementById("hiddenCandidatePhone").value,
+            leaderPhone: document.getElementById("hiddenLeaderPhone").value,
+            recordId: document.getElementById("hiddenRecordId").value,
+            notes: document.getElementById("meetingNotes").value
+        };
+
+        try {
+            let response = await fetch('/submitInterviewDetails', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(submitData)
+            });
+
+            let responseData = await response.json();
+
+            if (response.ok) {
+                alert('Interview Successfully Scheduled');
+                document.getElementById("scheduleInterviewModal").style.display = "none";
+                window.location.reload();
+            } else {
+                alert('Error: ' + responseData.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        }
+    });
+
+    function validateForm() {
+        let valid = true;
+        ["hiringManagerEmail", "candidateEmail", "locationSelect", "dateTime"].forEach(id => {
+            const element = document.getElementById(id);
+            if (!element.value) {
+                element.style.borderColor = "red";
+                valid = false;
+            } else {
+                element.style.borderColor = "";
+            }
+        });
+        return valid;
+    }
+
+    // Application Link functionality
+    document.getElementById("copyApplicationLinkButton").addEventListener("click", function () {
+        const applicationLinkTextarea = document.getElementById("applicationLinkTextarea");
+        navigator.clipboard.writeText(applicationLinkTextarea.value).then(function () {
+            alert("Application Link has been copied to your clipboard.");
+        }, function (err) {
+            console.error('Could not copy text: ', err);
+        });
+    });
+
+    // Schedule Onboarding Meeting functionality
+    document.querySelectorAll('.schedule-onboarding-button').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const firstName = encodeURIComponent(this.getAttribute('data-first-name'));
+            const lastName = encodeURIComponent(this.getAttribute('data-last-name'));
+            const email = encodeURIComponent(this.getAttribute('data-email'));
+            const phone = encodeURIComponent(this.getAttribute('data-phone'));
+            const officeName = encodeURIComponent(this.getAttribute('data-office-name'));
+
+            const calendlyUrl = `https://calendly.com/d/cpp4-nrp-26f/sales-onboarding-meeting?name=${firstName}%20${lastName}&email=${email}&a1=${phone}&a2=${officeName}`;
+
+            window.location.href = calendlyUrl;
+        });
+    });
+
+    // Notes functionality
+    document.getElementById("submitNotesButton").addEventListener("click", async function() {
+        const recordId = document.getElementById("notesRecordId").value;
+        const firstName = document.getElementById("notesFirstName").value;
+        const notes = document.getElementById("notesContent").value.trim();
+
+        if (!firstName || !notes) {
+            alert("Please fill in all fields.");
+            return;
+        }
+
+        try {
+            const response = await fetch("/update-notes", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ recordId, firstName, notes })
+            });
+
+            const responseData = await response.json();
+
+            if (response.ok) {
+                alert("Notes updated successfully.");
+                document.getElementById("notesModal").style.display = "none";
+                window.location.reload();
+            } else {
+                alert("Error: " + responseData.message);
+            }
+        } catch (error) {
+            console.error('Error updating notes:', error);
+            alert('An error occurred. Please try again.');
+        }
+    });
+
+    // Request To Hire functionality
+    document.querySelectorAll('.hire-button').forEach(button => {
+        button.addEventListener('click', function(event) {
+            const recordId = this.getAttribute('data-record-id');
+            const officeId = this.getAttribute('data-office-id');
+            window.location.href = `/requesthire/${recordId}?officeId=${officeId}`;
+        });
+    });
+});
+</script>
+            
+</body>
+</html>

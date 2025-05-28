@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{eventName}} Opt-In</title>
+    <style>
+        /* Basic styling */
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #4a4a4a;
+        }
+      #company-logo {
+            margin-top: 5px;
+            width: 350px; /* Adjust the width as needed */
+            height: auto; /* Let the height scale proportionally */
+            display: block;
+            margin: 0 auto;
+            text-align: center;
+            margin-bottom: -35px; /* Adjust the margin as needed */
+
+        
+}
+        h1 {
+          text-align: center;
+        }
+        /* Container for the list */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Attendee list styling */
+        .attendee-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .attendee-list li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .name {
+            font-weight: bold;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        label {
+            height: 20px;
+            width: 20px;
+            border: 0px solid #ddd;
+            border-radius: 4px;
+            display: inline-block;
+            vertical-align: middle;
+            display: block; /* Make the label display as a block, which allows it to be on top of the input */
+            margin-bottom: 1px;
+        }
+
+        label:checked {
+            background-color: #28a745;
+        }
+      /* Button styling */
+        .check-in-button {
+            border: none;
+            border-radius: 15px; /* Rounded corners */
+            padding: 8px 15px;
+            background-color: #4ac1e0; /* plp blue*/
+            color: white;
+            text-align: center;
+            cursor: pointer;
+          font-weight: bold;
+        }
+
+        /* Adjust spacing for button */
+      .attendee-list li {
+            display: flex;
+            align-items: center;
+            line-height: 1.5em; /* Adjust line height for better emoji alignment */
+          }
+
+    .emoji {
+            white-space: nowrap; /* Prevent extra space around emojis */
+            font-size: 1rem; /* Adjust emoji size if needed */
+            padding-right: 5px; /* Add slight padding for spacing */
+          }
+      
+      /* Modal styles */
+    .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4);
+            border-radius: 10px;/* Black w/ opacity */
+          
+          }
+
+    /* Modal Content */
+    .modal-content {
+            background-color
+            : #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; / Could be more or less, depending on screen size /
+            border-radius: 25px; / Optional: if you like rounded corners */
+            }
+    .modal-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 1em; /* Adjust size as needed */
+            margin-bottom: 20px; /* Adjust space between title and inputs */
+        }
+      
+           /* Default button styles */
+      .modal .yes-button,
+      .modal .no-button,
+      .modal #nextButton {
+          border: none;
+          border-radius: 15px;
+          padding: 10px 15px;
+          background-color: #4ac1e0; /* Primary color */
+          color: white;
+          text-align: center;
+          cursor: pointer;
+          font-weight: bold;
+          margin: 5px;
+      }
+
+      /* Selected button style */
+      .modal .yes-button.button-selected,
+      .modal .no-button.button-selected {
+          background-color: #4ac1e0; /* Keep the original color */
+          color: white;
+      }
+
+      /* Unselected button style */
+      .modal .yes-button.button-unselected,
+      .modal .no-button.button-unselected {
+          background-color: #f0f0f0; /* Lighter color for unselected button */
+          color: #ccc;
+      }
+
+    /* The Close Button */
+    .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            }
+
+    .close:hover,
+    .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+            }
+      
+          /* The Close Button */
+    .close-qualification {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            }
+
+    .close-qualification:hover,
+    .close-qualification:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+            }
+
+/* Input fields in the modal */
+.modal input[type="text"],
+.modal input[type="tel"],
+.modal input[type="email"] {
+    width: 90%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+  
+}
+
+/* Remove any unwanted styles for the label */
+.input-group .input-label {
+    /* Reset styles to default */
+    display: block;
+    margin-bottom: 1px;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: initial;
+    width: auto;
+    /* Optional: Add some left padding for labels for better alignment */
+    padding-left: 0;
+    font-weight: bold;
+}
+
+
+    /* Style the submit button */
+    #checkInButton {
+            background-color: #4ac1e0; /*PLP blue */
+            color: white;
+            padding: 14px 20px;
+
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            font-size: 16px;
+            letter-spacing: 1px;
+            }
+
+    #checkInButton:hover {
+            background-color: #45a049;
+    }
+    #registerButton {
+    border: none;
+    border-radius: 15px; /* Rounded corners */
+    padding: 12px 20px; /* Adjust padding for larger button */
+    background-color: #4ac1e0; /* plp blue */
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    display: block; /* Make the button a block element */
+    margin: 0 auto; /* Center horizontally */
+    width: 80%; /* Set the width to 80% of the parent container */
+      font-weight: bold;
+      font-size: 16px;
+      letter-spacing: 1px;
+}
+  
+/* Hover effect for the "Register" button */
+#registerButton:hover {
+    background-color: #4ac1d0;
+}
+      /* Style the registration modal */
+#registrationModal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+}
+
+/* Style the registration modal content */
+#registrationModal .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    border-radius: 25px;
+}
+
+/* Style the registration modal title */
+#registrationModal .modal-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+/* Style the close button for the registration modal */
+#registrationModal .close-registration {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* Hover effect for the close button in the registration modal */
+#registrationModal .close-registration:hover,
+#registrationModal .close-registration:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Style the input fields in the registration modal */
+#registrationModal input[type="text"],
+#registrationModal input[type="tel"],
+#registrationModal input[type="email"] {
+    width: 90%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Style the submit button in the registration modal */
+#registrationModal button#registrationCheckInButton {
+    background-color: #4ac1e0;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+  font-weight: bold;
+      font-size: 16px;
+      letter-spacing: 1px;
+}
+
+
+/* Hover effect for the submit button in the registration modal */
+#registrationModal button#registrationCheckInButton:hover {
+    background-color: #4ac1d0;
+}
+
+.button-selected {
+    background-color: #4ac1e0; /* Highlight color for selected button */
+    color: white;
+    border: 2px solid #4ac1e0; /* Optional: add a border to make it more prominent */
+}
+
+.button-unselected {
+    background-color: #f0f0f0; /* Lighter color for unselected button */
+    color: #ccc;
+    border: 2px solid #ccc; /* Optional: style for unselected button border */
+}
+
+      
+      
+      
+    </style>
+</head>
+<body>
+  <img src="https://cdn.glitch.global/d1a498f5-46b5-4cb0-8d70-9011d7b99de2/PLP%20Logo.png?v=1705445568021" alt="Company Logo" id="company-logo" width="200">
+
+
+  <div class="container">
+    <h1>{{eventName}} | Request Interview</h1>
+    <ul class="attendee-list">
+      {{#each attendees}}
+      <li>
+        <span class="name">{{this.firstName}} {{this.lastName}}</span>
+        <button class="check-in-button" 
+          data-firstname="{{this.firstName}}" 
+          data-lastname="{{this.lastName}}" 
+          data-phone="{{this.phone}}" 
+          data-email="{{this.email}}" 
+          data-id="{{this.id}}"
+          data-recordid="{{this.recordId}}">Request Interview</button>
+      </li>
+      {{/each}}
+    </ul>
+  </div>
+ 
+  <div id="attendeeModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Please confirm all your information is correct</h2>
+    <form id="attendeeForm">
+      <div class="input-group">
+        <label class="input-label" for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" value="{{firstName}}">
+      </div>
+      <div class="input-group">
+        <label class="input-label" for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" value="{{lastName}}">
+      </div>
+      <div class="input-group">
+        <label class="input-label" for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" value="{{phone}}">
+      </div>
+      <div class="input-group">
+        <label class="input-label" for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{email}}">
+      </div>
+      
+      
+
+      
+      <input type="hidden" id="recordId" name="recordId" value="{{recordId}}">
+      <input type="hidden" id="attendeeId" name="attendeeId" value="{{id}}">
+      <button type="button" id="checkInButton">Request Interview</button>
+    </form>
+  </div> 
+</div>
+  
+  <!-- Qualification Modal -->
+<div id="qualificationModal" class="modal">
+    <div class="modal-content">
+        <span class="close-qualification">&times;</span>
+        <h2>Qualification Questions</h2>
+        <!-- Include your qualification questions here -->
+        <!-- Question 1 -->
+        <div class="question">Do you have an Insurance Approved Driving Record?</div>
+        <div class="yes-no-buttons" data-question="insuranceApprovedDrivingRecord">
+            <button type="button" class="yes-button">Yes</button>
+            <button type="button" class="no-button">No</button>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="question">Do you have Car Insurance?</div>
+        <div class="yes-no-buttons" data-question="carInsurance">
+            <button type="button" class="yes-button">Yes</button>
+            <button type="button" class="no-button">No</button>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="question">Do you have Reliable Transportation?</div>
+        <div class="yes-no-buttons" data-question="reliableTransportation">
+            <button type="button" class="yes-button">Yes</button>
+            <button type="button" class="no-button">No</button>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="question">Do you have a Driver's License?</div>
+        <div class="yes-no-buttons" data-question="driversLicense">
+            <button type="button" class="yes-button">Yes</button>
+            <button type="button" class="no-button">No</button>
+        </div>
+      
+      <button id="nextButton">Next</button>
+
+    </div>
+</div>
+
+  
+  
+  <div id="registrationModal" class="modal">
+    <div class="modal-content">
+        <span class="close-registration">&times;</span>
+        <form id="registrationForm">
+          <h2>
+            Please register first, then click "Request Interview" button once you see your name on the list.
+          </h2>
+            <div class="input-group">
+                <label class="input-label" for="registrationFirstName">First Name:</label>
+                <input type="text" id="registrationFirstName" name="registrationFirstName" required>
+            </div>
+            <div class="input-group">
+                <label class="input-label" for="registrationLastName">Last Name:</label>
+                <input type="text" id="registrationLastName" name="registrationLastName" required>
+            </div>
+            <div class="input-group">
+                <label class="input-label" for="registrationPhone">Phone:</label>
+                <input type="tel" id="registrationPhone" name="registrationPhone" required>
+            </div>
+            <div class="input-group">
+                <label class="input-label" for="registrationEmail">Email:</label>
+                <input type="email" id="registrationEmail" name="registrationEmail" required>
+            </div>
+            <button type="button" id="registrationCheckInButton">Register</button>
+        </form>
+    </div>
+</div>
+   <button id="registerButton">I'm Not On The List</button>
+  <br>
+  <div id="eventLocation" style="display: none;">{{eventLocation}}</div>
+
+  <script>
+  // Function to validate the registration form fields
+  function validateRegistrationForm() {
+    const firstNameInput = document.getElementById('registrationFirstName').value;
+    const lastNameInput = document.getElementById('registrationLastName').value;
+    const phoneInput = document.getElementById('registrationPhone').value;
+    const emailInput = document.getElementById('registrationEmail').value;
+
+    // Check if any of the fields are blank
+    if (
+      firstNameInput.trim() === '' ||
+      lastNameInput.trim() === '' ||
+      phoneInput.trim() === '' ||
+      emailInput.trim() === ''
+    ) {
+      alert('Please fill in all fields before registering.');
+      return false; // Prevent form submission
+    }
+
+    return true; // Allow form submission
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    
+    // Function to open the registration modal
+    const openRegistrationModal = () => {
+      document.getElementById('registrationModal').style.display = 'block';
+    };
+
+    // Add an event listener to the "Register" button
+    document.getElementById('registerButton').addEventListener('click', () => {
+      openRegistrationModal();
+    });
+
+    // Close registration modal functionality
+    document.querySelector('.close-registration').addEventListener('click', () => {
+      document.getElementById('registrationModal').style.display = 'none';
+    });
+
+    // Handle the "Register" button click in the registration modal
+    document.getElementById('registrationCheckInButton').addEventListener('click', async () => {
+      // Validate the registration form fields
+      if (validateRegistrationForm()) {
+        // Gather the registration data from the input fields
+        const firstName = document.getElementById('registrationFirstName').value;
+        const lastName = document.getElementById('registrationLastName').value;
+        const phone = document.getElementById('registrationPhone').value;
+        const email = document.getElementById('registrationEmail').value;
+
+         // Get the event location from the DOM
+        const eventLocation = document.getElementById('eventLocation').textContent;
+    
+      const urlParts = window.location.pathname.split('/');
+      const eventIdIndex = urlParts.indexOf('optin');
+
+      if (eventIdIndex !== -1 && eventIdIndex > 0) {
+        const eventId = urlParts[eventIdIndex - 1]; // Get the part before 'optin' as eventId
+
+        // Assign values to the registrationData object
+        registrationData = {
+          firstName,
+          lastName,
+          phone,
+          email,
+          eventId,
+          eventLocation,
+        };
+      } else {
+        // Handle the case where eventId is not found
+        console.error('EventId not found in URL');
+        return;
+      }
+
+      try {
+        // Send a POST request to your server to create the record in Airtable
+        const response = await fetch('/create-update-opt-in-record', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(registrationData),
+        });
+
+        if (response.ok) {
+          // Record created/updated successfully, reload the page
+          document.getElementById('registrationModal').style.display = 'none';
+          location.reload(); // Refresh the page
+        } else {
+          // Handle the case where the create/update request was not successful
+          console.error('Error creating/updating record in Airtable');
+        }
+      } catch (error) {
+        console.error('Error creating/updating record:', error);
+      }
+    }
+  });
+    
+      // Function to open the modal with attendee data
+    const openModal = (attendee) => {
+        document.getElementById('firstName').value = attendee.firstName;
+        document.getElementById('lastName').value = attendee.lastName;
+        document.getElementById('phone').value = attendee.phone;
+
+        // Check if the email ends with "@indeedemail.com"
+        if (attendee.email.endsWith('@indeedemail.com')) {
+            document.getElementById('email').value = ''; // Blank out the email field
+        } else {
+            document.getElementById('email').value = attendee.email;
+        }
+
+        document.getElementById('recordId').value = attendee.recordId;
+        document.getElementById('attendeeId').value = attendee.id;
+        document.getElementById('attendeeModal').style.display = 'block';
+    };
+
+let currentAttendee = null; // Define this in a scope accessible by both the check-in button and the next button event listeners
+
+// Modify the check-in button event listener
+document.querySelectorAll('.check-in-button').forEach(button => {
+    button.addEventListener('click', function() {
+        currentAttendee = {
+            firstName: this.getAttribute('data-firstname'),
+            lastName: this.getAttribute('data-lastname'),
+            phone: this.getAttribute('data-phone'),
+            email: this.getAttribute('data-email'),
+            recordId: this.getAttribute('data-recordid'),
+            id: this.getAttribute('data-id')
+        };
+        openQualificationModal();
+    });
+});
+
+
+    // Close modal functionality
+    document.querySelector('.close').addEventListener('click', () => {
+        document.getElementById('attendeeModal').style.display = 'none';
+    });
+
+    // Handle the check-in button click in the modal
+    document.getElementById('checkInButton').addEventListener('click', async () => {
+        // Get input values
+        const firstNameInput = document.getElementById('firstName');
+        const lastNameInput = document.getElementById('lastName');
+        const phoneInput = document.getElementById('phone');
+        const emailInput = document.getElementById('email');
+      
+    
+        // Check if any of the fields are blank
+        if (firstNameInput.value.trim() === '' || lastNameInput.value.trim() === '' || phoneInput.value.trim() === '' || emailInput.value.trim() === '') {
+            // Notify the user and prevent check-in
+            alert('Please fill in all fields before checking in.');
+            return;
+        }
+        const eventLocation = "{{eventLocation}}";
+        // If all fields are filled, proceed with check-in
+        const updatedData = {
+            firstName: firstNameInput.value,
+            lastName: lastNameInput.value,
+            phone: phoneInput.value,
+            email: emailInput.value,
+            recordId: document.getElementById('recordId').value,
+            eventLocation: eventLocation,
+        };
+
+        try {
+            // Send a POST request to your server to update the record
+            const response = await fetch(`/update-opt-in/${document.getElementById('recordId').value}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedData) // Include recordId in the body
+            });
+
+            if (response.ok) {
+                // Record updated successfully, reload the page
+                document.getElementById('attendeeModal').style.display = 'none';
+                location.reload(); // Refresh the page
+            } else {
+                // Handle the case where the update request was not successful
+                console.error('Error updating record on the server');
+            }
+        } catch (error) {
+            console.error('Error updating record:', error);
+        }
+    });
+    
+        // Function to open the Qualification Modal
+    const openQualificationModal = () => {
+        document.getElementById('qualificationModal').style.display = 'block';
+    };
+
+    // Function to close the Qualification Modal
+    const closeQualificationModal = () => {
+        document.getElementById('qualificationModal').style.display = 'none';
+    };
+
+    // Close Qualification Modal when the close button is clicked
+    document.querySelector('.close-qualification').addEventListener('click', closeQualificationModal);
+
+    // Event listener for the "Request Interview" button
+    document.querySelectorAll('.check-in-button').forEach(button => {
+        button.addEventListener('click', openQualificationModal);
+    });
+
+    // Initialize answers object
+    let answers = {
+        insuranceApprovedDrivingRecord: null,
+        carInsurance: null,
+        reliableTransportation: null,
+        driversLicense: null
+    };
+
+    // Function to update answers based on Yes/No button clicks
+    document.querySelectorAll('.yes-no-buttons button').forEach(button => {
+        button.addEventListener('click', function() {
+            const question = this.parentNode.getAttribute('data-question');
+            const answer = this.classList.contains('yes-button') ? 'Yes' : 'No';
+            answers[question] = answer;
+
+        });
+    });
+
+    // Reset answers when the Qualification Modal is closed
+    document.querySelector('.close-qualification').addEventListener('click', function() {
+        answers = {
+            insuranceApprovedDrivingRecord: null,
+            carInsurance: null,
+            reliableTransportation: null,
+            driversLicense: null
+        };
+    });
+    
+    document.getElementById('nextButton').addEventListener('click', () => {
+    // Check if all answers are "Yes"
+    const allYes = Object.values(answers).every(val => val === 'Yes');
+
+    if (allYes) {
+        document.getElementById('qualificationModal').style.display = 'none'; // Close the qualification modal
+        openModal(currentAttendee); // You'll need to modify how you handle the attendee object
+    } else {
+        // Display notification
+        alert("All answers must be 'Yes' to qualify for this role. You are not qualified.");
+    }
+});
+
+    document.addEventListener('click', function(event) {
+        // Check if a Yes or No button was clicked
+        if (event.target.classList.contains('yes-button') || event.target.classList.contains('no-button')) {
+            const buttonGroup = event.target.closest('.yes-no-buttons');
+            const yesButton = buttonGroup.querySelector('.yes-button');
+            const noButton = buttonGroup.querySelector('.no-button');
+
+            // Reset classes for both buttons
+            yesButton.classList.remove('button-selected', 'button-unselected');
+            noButton.classList.remove('button-selected', 'button-unselected');
+
+            // Apply the 'button-selected' class to the clicked button and 'button-unselected' to the other
+            if (event.target.classList.contains('yes-button')) {
+                yesButton.classList.add('button-selected');
+                noButton.classList.add('button-unselected');
+            } else {
+                noButton.classList.add('button-selected');
+                yesButton.classList.add('button-unselected');
+            }
+        }
+    });
+    
+});
+
+
+    
+
+</script>
+</body>
+</html>

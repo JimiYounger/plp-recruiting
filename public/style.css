@@ -1,0 +1,64 @@
+/* Basic Styling */
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    color: #4a4a4a;
+}
+
+/* Container for the list */
+.container {
+    width: 100%;
+    max-width: 600px; /* Optimal for iPad */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* iMessage-like bubble */
+.bubble {
+    background-color: #e5e5ea;
+    border-radius: 20px;
+    padding: 10px 20px;
+    margin: 10px 0;
+    max-width: 80%;
+}
+
+/* Table inside the bubble */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+th {
+    background-color: #d1d1d6;
+}
+
+tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+/* Button Styling */
+.button {
+    display: inline-block;
+    padding: 8px 15px;
+    border-radius: 15px; /* Rounded corners */
+    text-decoration: none;
+    color: white;
+    background-color: #007bff; /* Blue color */
+    border: none;
+    cursor: pointer;
+}
+
+.button.edit {
+    background-color: #ffc107; /* Yellow color */
+}
+
+.button.check-in {
+    background-color: #28a745; /* Green color */
+}

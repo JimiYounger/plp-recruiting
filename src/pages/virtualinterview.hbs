@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purelight Power | Learn More About A Career In Solar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #4a4a4a;
+        }
+        #company-logo {
+            display: block;
+            max-width: 30%;
+            height: auto;
+            margin: 10px auto;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        h3 {
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 95%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="email"], input[type="tel"], select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        #submitApplication {
+            width: 100%;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+            background-color: #4ac1e0;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        #submitApplication:hover {
+            background-color: #3296b1;
+        }
+
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s infinite linear;
+            position: absolute;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .button-text {
+            display: block;
+        }
+
+        .loading .button-text {
+            display: none;
+        }
+
+        .loading .spinner {
+            display: block;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 40px;
+            border: 1px solid #888;
+            width: 50%;
+            max-width: 600px;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+  <script src="https://unpkg.com/libphonenumber-js@1.9.6/bundle/libphonenumber-max.js"></script>
+</head>
+<body>
+    <img src="https://cdn.glitch.global/d1a498f5-46b5-4cb0-8d70-9011d7b99de2/PLP%20Logo.png?v=1705445568021" alt="Company Logo" id="company-logo">
+    <div class="container">
+        <h1>Apply for an interview in our next hiring wave</h1>
+        <h3>Limited to 5 per team per wave!</h3>
+        <br>
+        <form id="applicationForm">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" required>
+
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" required>
+            
+            <label for="market">Market</label>
+            <select id="market" name="market" onchange="updateHiddenField()" required>
+                <option value="">Please select</option>
+                {{#each officeData}}
+                <option value="{{this.id}}">{{this.name}}</option>
+                {{/each}}
+            </select>
+
+            <input type="hidden" id="selectedOfficeId" name="selectedOfficeId">
+            <input type="hidden" name="utm_source" id="utm_source">
+            <input type="hidden" name="utm_medium" id="utm_medium">
+            <input type="hidden" name="utm_campaign" id="utm_campaign">  
+          
+            <button type="submit" id="submitApplication">
+                <span class="button-text">Request Interview</span>
+                <div class="spinner"></div>
+            </button>
+        </form>
+    </div>
+  
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('successModal').style.display='none'">&times;</span>
+            <h1>Check your phone or email for the link to the virtual interview!</h1>
+            <p>If you have any issues feel free to respond in either of those threads!</p>
+        </div>
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById('utm_source').value = urlParams.get('utmSource') || '';
+        document.getElementById('utm_medium').value = urlParams.get('utmMedium') || '';
+        document.getElementById('utm_campaign').value = urlParams.get('utmCampaign') || '';
+
+        // Add event listener for phone input validation
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('input', validatePhoneNumber);
+    });
+
+    function updateHiddenField() {
+        const selectedOfficeId = document.getElementById('market').value;
+        document.getElementById('selectedOfficeId').value = selectedOfficeId;
+    }
+
+    function formatPhoneNumberToE164(phoneNumber) {
+        try {
+            const parsedNumber = libphonenumber.parsePhoneNumber(phoneNumber, 'US');
+            return parsedNumber.isValid() ? parsedNumber.format('E.164') : null;
+        } catch (error) {
+            console.error('Error formatting phone number:', error);
+            return null;
+        }
+    }
+
+    function validatePhoneNumber() {
+        const phoneInput = document.getElementById('phone');
+        const formattedNumber = formatPhoneNumberToE164(phoneInput.value);
+        
+        if (formattedNumber) {
+            phoneInput.setCustomValidity('');
+            phoneInput.style.borderColor = 'green';
+        } else {
+            phoneInput.setCustomValidity('Please enter a valid phone number');
+            phoneInput.style.borderColor = 'red';
+        }
+    }
+
+    document.getElementById('applicationForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const button = document.getElementById('submitApplication');
+        if (button.classList.contains('loading')) return; // Prevent multiple clicks
+
+        // Validate all form fields
+        if (!e.target.checkValidity()) {
+            e.target.reportValidity();
+            return;
+        }
+
+        button.classList.add('loading');
+        button.disabled = true; // Disable the button
+
+        const phoneNumber = document.getElementById('phone').value;
+        const formattedPhoneNumber = formatPhoneNumberToE164(phoneNumber);
+
+        if (!formattedPhoneNumber) {
+            alert('Please enter a valid phone number.');
+            button.classList.remove('loading');
+            button.disabled = false;
+            return;
+        }
+
+        const formData = {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            email: document.getElementById('email').value,
+            phone: formattedPhoneNumber,
+            officeRecord: document.getElementById('selectedOfficeId').value,
+            utmSource: document.getElementById('utm_source').value,
+            utmMedium: document.getElementById('utm_medium').value,
+            utmCampaign: document.getElementById('utm_campaign').value,
+        };
+
+        try {
+            const response = await fetch('/videoask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                document.getElementById('successModal').style.display = 'flex';
+            } else {
+                alert('There was an error submitting your application. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('There was an error submitting your application. Please try again.');
+        } finally {
+            button.classList.remove('loading');
+            button.disabled = false; // Re-enable the button
+        }
+    });
+
+    function showModal() {
+        const modal = document.getElementById('successModal');
+        modal.style.display = 'flex';
+
+        const button = document.getElementById('submitApplication');
+        button.classList.remove('loading');
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('successModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submission Confirmation</title>
+    <!-- Add your Bootstrap CSS link here if needed -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #4a4a4a;
+            line-height: 1.6;
+            padding-top: 50px;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 95%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        p {
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .link-container {
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn:active {
+            background-color: #003d80;
+        }
+    </style>
+    <script>
+        function copyToClipboard() {
+            const copyText = document.getElementById("paylocityLink").textContent;
+            const textarea = document.createElement("textarea");
+            textarea.value = copyText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+            alert("Link copied to clipboard");
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Request Submitted Successfully</h1>
+        <p>Your request to hire has been successfully submitted. The candidate has been texted the link to the Paylocity application. Please confirm with them that they have received the link, if not here is the link for your convenience.</p>
+        {{#if paylocityApplicationLink}}
+            <div class="link-container">
+                <p id="paylocityLink">{{paylocityApplicationLink}}</p>
+                <button class="btn" onclick="copyToClipboard()">Copy To Clipboard</button>
+            </div>
+        {{else}}
+            <p>No Paylocity Application Link available.</p>
+        {{/if}}
+    </div>
+    <!-- Add your scripts here if needed -->
+</body>
+</html>

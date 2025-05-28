@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate List</title>
+    <style>
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #4a4a4a;
+    text-align: center; /* Center align the content */
+    margin: 0; /* Reset default margin */
+}
+
+.container {
+    max-width: 500px; /* Adjust based on your preference for mobile width */
+    margin: 20px auto; /* Center the container */
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    margin-bottom: 20px; /* Add space below the header */
+}
+
+.candidate-list {
+    list-style: none;
+    padding: 0; /* Reset default padding */
+    margin: 0; /* Reset default margin */
+}
+
+.candidate-list li {
+    padding: 20px; /* Add some padding to each list item */
+    border-bottom: 1px solid #ddd;
+}
+
+.name-container,
+.candidate-info,
+.button-group {
+    margin-bottom: 10px; /* Add space below each section */
+}
+      
+  .name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-align: center; /* Center the name */
+            font-size: 25px;
+        }
+      
+.phone {
+    display: block; /* Each item takes the full width */
+    margin-bottom: 5px; /* Add space below each item */
+}
+
+.button-group {
+    justify-content: center; /* Center the buttons inside the group */
+    gap: 10px; /* Add some space between buttons */
+}
+
+.button-group a {
+    display: inline-flex; /* Inline-flex to keep them inline and aligned */
+    justify-content: center;
+    align-items: center;
+    width: 50px; /* Adjust width as needed */
+    height: 50px; /* Adjust height as needed */
+    padding: 5px; /* Adjust padding as needed */
+    border-radius: 50%; /* Circular buttons */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional: add some shadow for depth */
+    text-decoration: none; /* Remove underline from links */
+}
+
+.button-group img {
+    width: 100%; /* Take full width of the parent (button size controlled above) */
+    height: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        width: 75%; /* Make container take more width on smaller screens */
+    }
+}
+
+      
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Candidate List</h1>
+        <ul class="candidate-list">
+          <hr>
+            {{#each candidates}}
+            <li>
+                <div class="name-container">
+                    <span class="name">{{this.fullName}}</span>
+                </div>
+                <div class="name-container">
+                    <span class="phone">{{this.phone}}</span>
+                </div>             
+                <div class="button-group">
+                                      <a href="#" class="phone-icon" data-phone="{{this.phone}}">
+    <img src="https://cdn.glitch.global/d1a498f5-46b5-4cb0-8d70-9011d7b99de2/Icons-02.svg?v=1705616374477" alt="Phone Icon">
+</a>
+<a href="#" class="sms-icon" data-phone="{{this.phone}}" data-name="{{this.firstName}}">
+    <img src="https://cdn.glitch.global/d1a498f5-46b5-4cb0-8d70-9011d7b99de2/Icons-04.svg?v=1705616374710" alt="SMS Icon">
+</a>
+                </div>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+  <script>
+       document.addEventListener('DOMContentLoaded', function() {
+    // Attach event listeners to phone buttons
+    document.querySelectorAll('.phone-icon').forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent default anchor action
+            let phone = this.getAttribute("data-phone");
+            if(phone) {
+                window.top.location.href = "tel:" + phone;
+            }
+        });
+    });
+
+    // Attach event listeners to SMS buttons
+    document.querySelectorAll('.sms-icon').forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent default anchor action
+            let phone = this.getAttribute("data-phone");
+            let name = this.getAttribute("data-name");
+            if(phone && name) {
+                window.top.location.href = `sms:+1${phone}?&body=Hey%20${name}!`;
+            }
+        });
+    });
+       
+
+       
+});
+  </script>
+</body>
+</html>
